@@ -1,0 +1,57 @@
+body {
+    font-family: sans-serif;
+    background: white;
+    color: black;
+}
+
+fieldset {
+    border: none;
+}
+button, input {
+    border: 1px solid black;
+    background: #eee;
+    color: black;
+    font-size: 1.5rem;
+}
+button {
+    height: 2.5rem;
+}
+input {
+    padding: 0.3rem;
+}
+
+#tasks ul {
+    display: table-row;
+    font-size: 1.5rem;
+}
+#tasks input {
+    width: calc(100vw - 6rem);
+}
+
+@media print {
+    h1, button, li:first-child {
+        display: none;
+    }
+    input {
+        background: white;
+        color: black;
+        border: none;
+    }
+    #tasks ul {
+        display: block;
+        list-style-type: "☐";
+    }
+}
+
+@media screen and (prefers-color-scheme: dark) {
+    body {
+        background: black;
+        color: white;
+    }
+
+    button, input {
+        border: 1px solid white;
+        background: #222;
+        color: white;
+    }
+}
