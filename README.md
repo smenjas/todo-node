@@ -8,5 +8,5 @@ the Node.js runtime.
 - No libraries, frameworks, templates, or preprocessors other than what Node.js
   provides itself
 - No dev tools except Git, an editor, a web browser, and
-  `[npx](https://www.npmjs.com/package/npx)
-  [nodemon](https://www.npmjs.com/package/nodemon) src`
+  [`npx`](https://www.npmjs.com/package/npx)
+  [`nodemon`](https://www.npmjs.com/package/nodemon) `src`
