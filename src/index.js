@@ -26,6 +26,11 @@ const server = http.createServer((request, response) => {
             response.setHeader('Content-Type', 'text/css');
             content = fs.readFileSync('main.css', 'utf8');
             break;
+        case '/404.jpg':
+            response.statusCode = 200;
+            response.setHeader('Content-Type', 'image/jpeg');
+            content = fs.readFileSync('404.jpg');
+            break;
         default:
             response.statusCode = 404;
             response.setHeader('Content-Type', 'text/html');
