@@ -105,16 +105,20 @@ function createAccount(request, response) {
     });
 }
 
-function createUser(user, password) {
-    let users = {};
-
+function getUsers() {
     try {
         const json = fs.readFileSync('../data/users.json', 'utf8');
-        users = JSON.parse(json);
+        return JSON.parse(json);
     }
     catch (e) {
         console.log(e);
     }
+
+    return {};
+}
+
+function createUser(user, password) {
+    const users = getUsers();
 
     if (user.name in users) {
         console.log(`The username ${user.name} already exists.`);
@@ -127,7 +131,10 @@ function createUser(user, password) {
     console.log(user);
 
     users[user.name] = user;
+    setUsers(users);
+}
 
+function setUsers(users) {
     fs.writeFile('../data/users.json', JSON.stringify(users), error => {
         if (error) {
             console.error(error);
