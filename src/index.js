@@ -14,17 +14,17 @@ const server = http.createServer((request, response) => {
         case '/index.html':
             response.statusCode = 200;
             response.setHeader('Content-Type', 'text/html');
-            content = fs.readFileSync('index.html', 'utf8');
+            content = fs.readFileSync('../public/html/index.html', 'utf8');
             break;
         case '/client.js':
             response.statusCode = 200;
             response.setHeader('Content-Type', 'text/javascript');
-            content = fs.readFileSync('client.js', 'utf8');
+            content = fs.readFileSync('../public/js/client.js', 'utf8');
             break;
         case '/main.css':
             response.statusCode = 200;
             response.setHeader('Content-Type', 'text/css');
-            content = fs.readFileSync('main.css', 'utf8');
+            content = fs.readFileSync('../public/css/main.css', 'utf8');
             break;
         case '/backup-tasks':
             response.setHeader('Cache-Control', 'no-cache');
@@ -33,12 +33,12 @@ const server = http.createServer((request, response) => {
         case '/404.jpg':
             response.statusCode = 200;
             response.setHeader('Content-Type', 'image/jpeg');
-            content = fs.readFileSync('404.jpg');
+            content = fs.readFileSync('../public/img/404.jpg');
             break;
         default:
             response.statusCode = 404;
             response.setHeader('Content-Type', 'text/html');
-            content = fs.readFileSync('404.html', 'utf8');
+            content = fs.readFileSync('../public/html/404.html', 'utf8');
             break;
     }
 
@@ -67,7 +67,7 @@ function backupTasks(request, response) {
         const tasks = JSON.parse(body);
         const bytes = Buffer.byteLength(body);
         console.log(tasks, bytes);
-        fs.writeFile('./tasks.json', body, error => {
+        fs.writeFile('../data/tasks.json', body, error => {
             if (error) {
                 console.error(error);
             }
