@@ -1,3 +1,5 @@
+'use strict';
+
 const inputSize = 70;
 const maxLength = 70;
 let httpRequest;
