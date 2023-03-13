@@ -51,7 +51,7 @@ server.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);
 });
 
-function backupTasks(request, response) {
+function handlePostRequest(request, response, callback) {
     if (request.method !== 'POST') {
         response.statusCode = 400; // HTTP 400: Bad Request
         const error = `ERROR: Request method is ${request.method}, not POST.`;
@@ -63,6 +63,12 @@ function backupTasks(request, response) {
         body += chunk.toString();
     });
     request.on('end', () => {
+        callback(body);
+    });
+}
+
+function backupTasks(request, response) {
+    handlePostRequest(request, response, body => {
         response.statusCode = 200; // HTTP 200: OK
         const tasks = JSON.parse(body);
         const bytes = Buffer.byteLength(body);
