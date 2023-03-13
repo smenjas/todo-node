@@ -101,33 +101,37 @@ function createAccount(request, response) {
     handlePostRequest(request, response, body => {
         const data = querystring.parse(body);
         const user = { name: data.name }
-        let users = {};
+        createUser(user, data.password);
+    });
+}
 
-        try {
-            const json = fs.readFileSync('../data/users.json', 'utf8');
-            users = JSON.parse(json);
+function createUser(user, password) {
+    let users = {};
+
+    try {
+        const json = fs.readFileSync('../data/users.json', 'utf8');
+        users = JSON.parse(json);
+    }
+    catch (e) {
+        console.log(e);
+    }
+
+    if (user.name in users) {
+        console.log(`The username ${user.name} already exists.`);
+        return;
+    }
+
+    user.salt = createSalt();
+    user.hash = hashPassword(password, user.salt);
+    user.created = Date.now();
+    console.log(user);
+
+    users[user.name] = user;
+
+    fs.writeFile('../data/users.json', JSON.stringify(users), error => {
+        if (error) {
+            console.error(error);
         }
-        catch (e) {
-            console.log(e);
-        }
-
-        if (user.name in users) {
-            console.log(`The username ${user.name} already exists.`);
-            return;
-        }
-
-        user.salt = createSalt();
-        user.hash = hashPassword(data.password, user.salt);
-        user.created = Date.now();
-        console.log(user);
-
-        users[user.name] = user;
-
-        fs.writeFile('../data/users.json', JSON.stringify(users), error => {
-            if (error) {
-                console.error(error);
-            }
-        });
     });
 }
 
