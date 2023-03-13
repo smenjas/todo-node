@@ -3,6 +3,8 @@
 const fs = require('fs');
 const http = require('http');
 const url = require('url');
+const querystring = require('querystring');
+const crypto = require('crypto');
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -31,6 +33,18 @@ const server = http.createServer((request, response) => {
             response.setHeader('Cache-Control', 'no-cache');
             backupTasks(request, response);
             return;
+        case '/create-account':
+            if (request.method === 'POST') {
+                createAccount(request, response);
+                response.statusCode = 302;
+                response.setHeader('Location', request.headers.referer);
+                response.end();
+                return;
+            }
+            response.statusCode = 200;
+            response.setHeader('Content-Type', 'text/html');
+            content = fs.readFileSync('../public/html/create-account.html', 'utf8');
+            break;
         case '/404.jpg':
             response.statusCode = 200;
             response.setHeader('Content-Type', 'image/jpeg');
@@ -81,4 +95,49 @@ function backupTasks(request, response) {
         });
         response.end(`Received ${bytes} bytes.`);
     });
+}
+
+function createAccount(request, response) {
+    handlePostRequest(request, response, body => {
+        const data = querystring.parse(body);
+        const user = { name: data.name }
+        let users = {};
+
+        try {
+            const json = fs.readFileSync('../data/users.json', 'utf8');
+            users = JSON.parse(json);
+        }
+        catch (e) {
+            console.log(e);
+        }
+
+        if (user.name in users) {
+            console.log(`The username ${user.name} already exists.`);
+            return;
+        }
+
+        user.salt = createSalt();
+        user.hash = hashPassword(data.password, user.salt);
+        user.created = Date.now();
+        console.log(user);
+
+        users[user.name] = user;
+
+        fs.writeFile('../data/users.json', JSON.stringify(users), error => {
+            if (error) {
+                console.error(error);
+            }
+        });
+    });
+}
+
+function createSalt() {
+    return crypto.randomBytes(16).toString('hex');
+}
+
+function hashPassword(password, salt) {
+    const iterations = 1000;
+    const keylen = 64;
+    password = password.toString().normalize();
+    return crypto.pbkdf2Sync(password, salt, iterations, keylen, 'sha512').toString('hex');
 }
