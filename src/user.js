@@ -24,6 +24,25 @@ module.exports = class User {
         return { success: true };
     }
 
+    static logIn(name, password) {
+        const users = User.getUsers();
+
+        if (!(name in users)) {
+            console.log(`The username ${name} does not exist, log in failed.`);
+            return false;
+        }
+
+        const user = users[name];
+        const hash = User.hashPassword(password, user.salt);
+
+        if (hash !== user.hash) {
+            console.log(`Incorrect password, log in failed.`);
+            return false;
+        }
+
+        return true;
+    }
+
     static getUsers() {
         try {
             const json = fs.readFileSync('../data/users.json', 'utf8');

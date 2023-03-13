@@ -44,6 +44,15 @@ const server = http.createServer((request, response) => {
             response.setHeader('Content-Type', 'text/html');
             content = fs.readFileSync('../public/html/create-account.html', 'utf8');
             break;
+        case '/login':
+            if (request.method === 'POST') {
+                logIn(request, response);
+                return;
+            }
+            response.statusCode = 200;
+            response.setHeader('Content-Type', 'text/html');
+            content = fs.readFileSync('../public/html/login.html', 'utf8');
+            break;
         case '/404.jpg':
             response.statusCode = 200;
             response.setHeader('Content-Type', 'image/jpeg');
@@ -98,6 +107,17 @@ function createAccount(request, response) {
         const user = { name: data.name }
         const result = User.create(user, data.password);
         const location = (result.success) ? '/' : request.headers.referer;
+        response.statusCode = 302;
+        response.setHeader('Location', location);
+        response.end();
+    });
+}
+
+function logIn(request, response) {
+    handlePostRequest(request, response, body => {
+        const data = querystring.parse(body);
+        const result = User.logIn(data.name, data.password);
+        const location = (result) ? '/' : request.headers.referer;
         response.statusCode = 302;
         response.setHeader('Location', location);
         response.end();
