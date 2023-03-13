@@ -11,7 +11,6 @@ const server = http.createServer((request, response) => {
 
     switch (path) {
         case '/':
-        case '/index.html':
             response.statusCode = 200;
             response.setHeader('Content-Type', 'text/html');
             content = fs.readFileSync('../public/html/index.html', 'utf8');
