@@ -26,6 +26,10 @@ const server = http.createServer((request, response) => {
             response.setHeader('Content-Type', 'text/css');
             content = fs.readFileSync('main.css', 'utf8');
             break;
+        case '/backup-tasks':
+            response.setHeader('Cache-Control', 'no-cache');
+            backupTasks(request, response);
+            return;
         case '/404.jpg':
             response.statusCode = 200;
             response.setHeader('Content-Type', 'image/jpeg');
@@ -46,3 +50,28 @@ const server = http.createServer((request, response) => {
 server.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);
 });
+
+function backupTasks(request, response) {
+    if (request.method !== 'POST') {
+        response.statusCode = 400; // HTTP 400: Bad Request
+        const error = `ERROR: Request method is ${request.method}, not POST.`;
+        console.log(error);
+        response.end(error);
+    }
+    let body = '';
+    request.on('data', chunk => {
+        body += chunk.toString();
+    });
+    request.on('end', () => {
+        response.statusCode = 200; // HTTP 200: OK
+        const tasks = JSON.parse(body);
+        const bytes = Buffer.byteLength(body);
+        console.log(tasks, bytes);
+        fs.writeFile('./tasks.json', body, error => {
+            if (error) {
+                console.error(error);
+            }
+        });
+        response.end(`Received ${bytes} bytes.`);
+    });
+}
