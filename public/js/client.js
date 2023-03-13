@@ -107,22 +107,16 @@ function describeHttpRequestState(readyState) {
     switch (httpRequest.readyState) {
         case XMLHttpRequest.UNSENT:
             return "AJAX connection has not been opened yet.";
-            break;
         case XMLHttpRequest.OPENED:
             return "AJAX request opened and in progress.";
-            break;
         case XMLHttpRequest.HEADERS_RECEIVED:
             return "AJAX request sent, headers and status are available.";
-            break;
         case XMLHttpRequest.LOADING:
             return "AJAX request in progress.";
-            break;
         case XMLHttpRequest.DONE:
             return "AJAX request complete.";
-            break;
         default:
             return "ERROR: AJAX state not recognized.";
-            break;
     }
 }
 
