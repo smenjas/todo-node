@@ -88,12 +88,16 @@ function backupTasks(request, response) {
         const tasks = JSON.parse(body);
         const bytes = Buffer.byteLength(body);
         console.log(tasks, bytes);
-        fs.writeFile('../data/tasks.json', body, error => {
-            if (error) {
-                console.error(error);
-            }
-        });
+        setTasks(tasks);
         response.end(`Received ${bytes} bytes.`);
+    });
+}
+
+function setTasks(tasks) {
+    fs.writeFile('../data/tasks.json', JSON.stringify(tasks), error => {
+        if (error) {
+            console.error(error);
+        }
     });
 }
 
