@@ -8,8 +8,9 @@ module.exports = class User {
         const users = User.getUsers();
 
         if (user.name in users) {
-            console.log(`The username ${user.name} already exists.`);
-            return;
+            const error =`The username ${user.name} already exists.`;
+            console.log(error);
+            return { success: false, errors: { name: error } };
         }
 
         user.salt = User.createSalt();
@@ -19,6 +20,8 @@ module.exports = class User {
 
         users[user.name] = user;
         User.setUsers(users);
+
+        return { success: true };
     }
 
     static getUsers() {

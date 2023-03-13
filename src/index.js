@@ -38,9 +38,6 @@ const server = http.createServer((request, response) => {
         case '/create-account':
             if (request.method === 'POST') {
                 createAccount(request, response);
-                response.statusCode = 302;
-                response.setHeader('Location', request.headers.referer);
-                response.end();
                 return;
             }
             response.statusCode = 200;
@@ -99,6 +96,10 @@ function createAccount(request, response) {
     handlePostRequest(request, response, body => {
         const data = querystring.parse(body);
         const user = { name: data.name }
-        User.create(user, data.password);
+        const result = User.create(user, data.password);
+        const location = (result.success) ? '/' : request.headers.referer;
+        response.statusCode = 302;
+        response.setHeader('Location', location);
+        response.end();
     });
 }
