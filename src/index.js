@@ -21,6 +21,12 @@ const server = http.createServer((request, response) => {
     }
     let content = '';
 
+    if (sessionID && !name && path !== '/logout') {
+        console.log("Unrecognized sessionID, logging out.");
+        logOut(request, response);
+        return;
+    }
+
     switch (path) {
         case '/':
             response.statusCode = 200;
@@ -59,6 +65,9 @@ const server = http.createServer((request, response) => {
             response.setHeader('Content-Type', 'text/html');
             content = fs.readFileSync('../public/html/login.html', 'utf8');
             break;
+        case '/logout':
+            logOut(request, response);
+            return;
         case '/404.jpg':
             response.statusCode = 200;
             response.setHeader('Content-Type', 'image/jpeg');
@@ -124,9 +133,31 @@ function logIn(request, response) {
         const data = querystring.parse(body);
         const sessionID = User.logIn(data.name, data.password);
         const location = (sessionID) ? '/' : request.headers.referer;
+        const now = new Date();
+        const future = now.setMonth(now.getMonth() + 1);
+        const expires = new Date(future).toUTCString();
         response.statusCode = 302;
         response.setHeader('Location', location);
         response.setHeader('Set-Cookie', `sessionID=${encodeURIComponent(sessionID)}`);
+        response.setHeader('Expires', expires);
         response.end();
     });
+}
+
+function logOut(request, response) {
+    const data = querystring.parse(request.headers.cookie);
+    const sessionID = decodeURIComponent(data.sessionID);
+
+    if (sessionID) {
+        const name = User.getUserBySessionID(sessionID);
+        console.log('Logging out:', name);
+    }
+
+    User.deleteSessionID(sessionID);
+
+    response.statusCode = 302;
+    response.setHeader('Location', request.headers.referer ?? '/');
+    response.setHeader('Set-Cookie', `sessionID=`);
+    response.setHeader('Expires', 0);
+    response.end();
 }

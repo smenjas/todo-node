@@ -63,8 +63,20 @@ module.exports = class User {
         });
     }
 
-    static getUserBySessionID(sessionID) {
+    static deleteSessionID(sessionID) {
         if (sessionID === undefined) {
+            return;
+        }
+        const sessions = User.getSessions();
+        if (!(sessionID in sessions)) {
+            return;
+        }
+        delete sessions[sessionID];
+        User.setSessions(sessions);
+    }
+
+    static getUserBySessionID(sessionID) {
+        if (!sessionID) {
             return;
         }
         const sessions = User.getSessions();
