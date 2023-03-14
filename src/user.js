@@ -29,7 +29,7 @@ module.exports = class User {
 
         if (!(name in users)) {
             console.log(`The username ${name} does not exist, log in failed.`);
-            return false;
+            return '';
         }
 
         const user = users[name];
@@ -37,10 +37,41 @@ module.exports = class User {
 
         if (hash !== user.hash) {
             console.log(`Incorrect password, log in failed.`);
-            return false;
+            return '';
         }
 
-        return true;
+        return User.createSessionID(name);
+    }
+
+    static getSessions() {
+        try {
+            const json = fs.readFileSync('../data/sessions.json', 'utf8');
+            return JSON.parse(json);
+        }
+        catch (e) {
+            console.log("Caught Exception, path does not exist:", e.path);
+        }
+
+        return {};
+    }
+
+    static setSessions(sessions) {
+        fs.writeFile('../data/sessions.json', JSON.stringify(sessions), error => {
+            if (error) {
+                console.error(error);
+            }
+        });
+    }
+
+    static getUserBySessionID(sessionID) {
+        if (sessionID === undefined) {
+            return;
+        }
+        const sessions = User.getSessions();
+        if (!(sessionID in sessions)) {
+            return;
+        }
+        return sessions[sessionID];
     }
 
     static getUsers() {
@@ -65,6 +96,17 @@ module.exports = class User {
 
     static createSalt() {
         return crypto.randomBytes(16).toString('hex');
+    }
+
+    static createSessionID(name) {
+        const sessions = User.getSessions();
+        let sessionID = '';
+        do {
+            sessionID = crypto.randomBytes(16).toString('base64');
+        } while (sessionID in sessions);
+        sessions[sessionID] = name;
+        User.setSessions(sessions);
+        return sessionID;
     }
 
     static hashPassword(password, salt) {

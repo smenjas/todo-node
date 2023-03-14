@@ -13,6 +13,12 @@ const port = 3000;
 
 const server = http.createServer((request, response) => {
     const path = url.parse(request.url).pathname;
+    const cookieData = querystring.parse(request.headers.cookie);
+    const sessionID = decodeURIComponent(cookieData.sessionID);
+    const name = User.getUserBySessionID(sessionID);
+    if (path.indexOf('.') === -1) {
+        console.log(request.method, path, `sessionID: '${sessionID}'`, "name:", name);
+    }
     let content = '';
 
     switch (path) {
@@ -116,10 +122,11 @@ function createAccount(request, response) {
 function logIn(request, response) {
     handlePostRequest(request, response, body => {
         const data = querystring.parse(body);
-        const result = User.logIn(data.name, data.password);
-        const location = (result) ? '/' : request.headers.referer;
+        const sessionID = User.logIn(data.name, data.password);
+        const location = (sessionID) ? '/' : request.headers.referer;
         response.statusCode = 302;
         response.setHeader('Location', location);
+        response.setHeader('Set-Cookie', `sessionID=${encodeURIComponent(sessionID)}`);
         response.end();
     });
 }
