@@ -5,6 +5,7 @@ const http = require('http');
 const url = require('url');
 const querystring = require('querystring');
 
+const HTML = require('./html.js');
 const Task = require('./task.js');
 const User = require('./user.js');
 
@@ -31,7 +32,7 @@ const server = http.createServer((request, response) => {
         case '/':
             response.statusCode = 200;
             response.setHeader('Content-Type', 'text/html');
-            content = fs.readFileSync('../public/html/index.html', 'utf8');
+            content = createTasksHTML();
             break;
         case '/client.js':
             response.statusCode = 200;
@@ -54,7 +55,7 @@ const server = http.createServer((request, response) => {
             }
             response.statusCode = 200;
             response.setHeader('Content-Type', 'text/html');
-            content = fs.readFileSync('../public/html/create-account.html', 'utf8');
+            content = createAccountHTML();
             break;
         case '/login':
             if (request.method === 'POST') {
@@ -63,7 +64,7 @@ const server = http.createServer((request, response) => {
             }
             response.statusCode = 200;
             response.setHeader('Content-Type', 'text/html');
-            content = fs.readFileSync('../public/html/login.html', 'utf8');
+            content = createLoginHTML();
             break;
         case '/logout':
             logOut(request, response);
@@ -160,4 +161,31 @@ function logOut(request, response) {
     response.setHeader('Set-Cookie', `sessionID=`);
     response.setHeader('Expires', 0);
     response.end();
+}
+
+function createHTML(title, body, headers = '') {
+    headers = HTML.createExternalCSS('main.css') + headers;
+    body = `<h1>${title}</h1>\n${body}`;
+    return HTML.create(title, body, headers, 'en-us');
+}
+
+function createTasksHTML() {
+    const body = '<form id="tasks">\n<ul></ul>\n</form>';
+    const headers = HTML.createExternalJS('client.js');
+    return createHTML("ToDo: Node", body, headers);
+}
+
+function createLoginHTML(title = "Log In", action = 'login') {
+    const size = 30;
+    const max = 63;
+    const body = `<form method="post" action="${action}" id="${action}">
+<input size="${size}" maxlength="${max}" placeholder="username" type="text" name="name" required><br>
+<input size="${size}" maxlength="${max}" placeholder="password" type="password" name="password" required><br>
+<button type="submit">${title}</button>
+</form>`;
+    return createHTML(title, body);
+}
+
+function createAccountHTML() {
+    return createLoginHTML("Create an Account", 'create-account');
 }
