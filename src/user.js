@@ -46,7 +46,7 @@ module.exports = class User {
             return '';
         }
 
-        return User.createSessionID(name);
+        return User.createSession(name);
     }
 
     static getSessions() {
@@ -89,7 +89,13 @@ module.exports = class User {
         if (!(sessionID in sessions)) {
             return;
         }
-        return sessions[sessionID];
+        const session = sessions[sessionID];
+        if (session.expires < Date.now()) {
+            console.log(`${session.name}'s session expired at ${session.expires}`);
+            User.deleteSessionID(sessionID);
+            return;
+        }
+        return session.name;
     }
 
     static getUsers() {
@@ -116,15 +122,23 @@ module.exports = class User {
         return crypto.randomBytes(16).toString('hex');
     }
 
-    static createSessionID(name) {
+    static createSession(name) {
         const sessions = User.getSessions();
         let sessionID = '';
         do {
             sessionID = crypto.randomBytes(16).toString('base64');
         } while (sessionID in sessions);
-        sessions[sessionID] = name;
+        const now = new Date();
+        const expires = now.setMonth(now.getMonth() + 1);
+        sessions[sessionID] = {
+            name: name,
+            expires: expires,
+        };
         User.setSessions(sessions);
-        return sessionID;
+        return {
+            ID: sessionID,
+            expires: expires,
+        };
     }
 
     static hashPassword(password, salt) {

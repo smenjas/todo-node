@@ -151,14 +151,12 @@ function logIn(request, response) {
             return;
         }
         const data = querystring.parse(body);
-        const sessionID = User.logIn(data.name, data.password);
-        const location = (sessionID) ? '/' : request.headers.referer;
-        const now = new Date();
-        const future = now.setMonth(now.getMonth() + 1);
-        const expires = new Date(future).toUTCString();
+        const session = User.logIn(data.name, data.password);
+        const location = (session.ID) ? '/' : request.headers.referer;
+        const expires = new Date(session.expires).toUTCString();
         response.statusCode = 302;
         response.setHeader('Location', location);
-        response.setHeader('Set-Cookie', `sessionID=${encodeURIComponent(sessionID)}`);
+        response.setHeader('Set-Cookie', `sessionID=${encodeURIComponent(session.ID)}`);
         response.setHeader('Expires', expires);
         response.end();
     });
