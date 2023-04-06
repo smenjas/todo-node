@@ -106,7 +106,7 @@ function showTasks(tasks) {
 }
 
 function describeHttpRequestState(readyState) {
-    switch (httpRequest.readyState) {
+    switch (readyState) {
         case XMLHttpRequest.UNSENT:
             return "AJAX connection has not been opened yet.";
         case XMLHttpRequest.OPENED:
