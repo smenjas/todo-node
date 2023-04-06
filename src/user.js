@@ -3,6 +3,8 @@
 const fs = require('fs');
 const crypto = require('crypto');
 
+const Session = require('./session.js');
+
 module.exports = class User {
     static create(user, password) {
         const users = User.getUsers();
@@ -46,53 +48,27 @@ module.exports = class User {
             return '';
         }
 
-        return User.createSession(name);
+        return Session.create(name);
     }
 
-    static getSessions() {
-        try {
-            const json = fs.readFileSync('../data/sessions.json', 'utf8');
-            return JSON.parse(json);
-        }
-        catch (e) {
-            console.log("Caught Exception, path does not exist:", e.path);
-        }
-
-        return {};
-    }
-
-    static setSessions(sessions) {
-        fs.writeFile('../data/sessions.json', JSON.stringify(sessions), error => {
-            if (error) {
-                console.error(error);
-            }
-        });
-    }
-
-    static deleteSessionID(sessionID) {
-        if (sessionID === undefined) {
-            return;
-        }
-        const sessions = User.getSessions();
-        if (!(sessionID in sessions)) {
-            return;
-        }
-        delete sessions[sessionID];
-        User.setSessions(sessions);
+    static logOut(sessionID) {
+        const name = User.getUserBySessionID(sessionID);
+        console.log("Logging out:", name);
+        Session.delete(sessionID);
     }
 
     static getUserBySessionID(sessionID) {
         if (!sessionID) {
             return;
         }
-        const sessions = User.getSessions();
+        const sessions = Session.getAll();
         if (!(sessionID in sessions)) {
             return;
         }
         const session = sessions[sessionID];
         if (session.expires < Date.now()) {
             console.log(`${session.name}'s session expired at ${session.expires}`);
-            User.deleteSessionID(sessionID);
+            Session.delete(sessionID);
             return;
         }
         return session.name;
@@ -120,25 +96,6 @@ module.exports = class User {
 
     static createSalt() {
         return crypto.randomBytes(16).toString('hex');
-    }
-
-    static createSession(name) {
-        const sessions = User.getSessions();
-        let sessionID = '';
-        do {
-            sessionID = crypto.randomBytes(16).toString('base64');
-        } while (sessionID in sessions);
-        const now = new Date();
-        const expires = now.setMonth(now.getMonth() + 1);
-        sessions[sessionID] = {
-            name: name,
-            expires: expires,
-        };
-        User.setSessions(sessions);
-        return {
-            ID: sessionID,
-            expires: expires,
-        };
     }
 
     static hashPassword(password, salt) {

@@ -165,13 +165,7 @@ function logIn(request, response) {
 function logOut(request, response) {
     const data = querystring.parse(request.headers.cookie);
     const sessionID = decodeURIComponent(data.sessionID);
-
-    if (sessionID) {
-        const name = User.getUserBySessionID(sessionID);
-        console.log('Logging out:', name);
-    }
-
-    User.deleteSessionID(sessionID);
+    User.logOut(sessionID);
 
     response.statusCode = 302;
     response.setHeader('Location', request.headers.referer ?? '/');
