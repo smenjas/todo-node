@@ -46,7 +46,7 @@ const server = http.createServer((request, response) => {
             break;
         case '/backup-tasks':
             response.setHeader('Cache-Control', 'no-cache');
-            backupTasks(request, response);
+            backupTasks(request, response, name);
             return;
         case '/create-account':
             if (request.method === 'POST') {
@@ -107,7 +107,7 @@ function handlePostRequest(request, response, callback) {
     });
 }
 
-function backupTasks(request, response) {
+function backupTasks(request, response, name) {
     handlePostRequest(request, response, (error, body) => {
         if (error) {
             console.error(error.message);
@@ -119,7 +119,7 @@ function backupTasks(request, response) {
         const tasks = JSON.parse(body);
         const bytes = Buffer.byteLength(body);
         console.log(tasks, bytes);
-        Task.setTasks(tasks);
+        Task.setTasks(name, tasks);
         response.end(`Received ${bytes} bytes.`);
     });
 }

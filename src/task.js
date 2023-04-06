@@ -3,8 +3,8 @@
 const fs = require('fs');
 
 module.exports = class Task {
-    static setTasks(tasks) {
-        fs.writeFile('../data/tasks.json', JSON.stringify(tasks), error => {
+    static setTasks(name, tasks) {
+        fs.writeFile(`../data/tasks/${name}.json`, JSON.stringify(tasks), error => {
             if (error) {
                 console.error(error);
             }
