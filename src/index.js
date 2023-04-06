@@ -44,9 +44,13 @@ const server = http.createServer((request, response) => {
             response.setHeader('Content-Type', 'text/css');
             content = fs.readFileSync('../public/css/main.css', 'utf8');
             break;
-        case '/backup-tasks':
+        case '/download-tasks':
             response.setHeader('Cache-Control', 'no-cache');
-            backupTasks(request, response, name);
+            downloadTasks(request, response, name);
+            return;
+        case '/upload-tasks':
+            response.setHeader('Cache-Control', 'no-cache');
+            uploadTasks(request, response, name);
             return;
         case '/create-account':
             if (request.method === 'POST') {
@@ -107,7 +111,22 @@ function handlePostRequest(request, response, callback) {
     });
 }
 
-function backupTasks(request, response, name) {
+function downloadTasks(request, response, name) {
+    handlePostRequest(request, response, (error, body) => {
+        if (error) {
+            console.error(error.message);
+            response.statusCode = error.statusCode;
+            response.end(error.message);
+            return;
+        }
+        const tasks = Task.getTasks(name);
+        response.statusCode = 200; // HTTP 200: OK
+        response.setHeader('Content-Type', 'application/json');
+        response.end(JSON.stringify(tasks));
+    });
+}
+
+function uploadTasks(request, response, name) {
     handlePostRequest(request, response, (error, body) => {
         if (error) {
             console.error(error.message);
