@@ -92,22 +92,29 @@ server.listen(port, hostname, () => {
 
 function handlePostRequest(request, response, callback) {
     if (request.method !== 'POST') {
-        response.statusCode = 400; // HTTP 400: Bad Request
-        const error = `ERROR: Request method is ${request.method}, not POST.`;
-        console.log(error);
-        response.end(error);
+        const error = {
+            statusCode: 400, // HTTP 400: Bad Request
+            message: `ERROR: Request method is ${request.method}, not POST.`,
+        };
+        callback(error, '');
     }
     let body = '';
     request.on('data', chunk => {
         body += chunk.toString();
     });
     request.on('end', () => {
-        callback(body);
+        callback(null, body);
     });
 }
 
 function backupTasks(request, response) {
-    handlePostRequest(request, response, body => {
+    handlePostRequest(request, response, (error, body) => {
+        if (error) {
+            console.error(error.message);
+            response.statusCode = error.statusCode;
+            response.end(error.message);
+            return;
+        }
         response.statusCode = 200; // HTTP 200: OK
         const tasks = JSON.parse(body);
         const bytes = Buffer.byteLength(body);
@@ -118,7 +125,13 @@ function backupTasks(request, response) {
 }
 
 function createAccount(request, response) {
-    handlePostRequest(request, response, body => {
+    handlePostRequest(request, response, (error, body) => {
+        if (error) {
+            console.error(error.message);
+            response.statusCode = error.statusCode;
+            response.end(error.message);
+            return;
+        }
         const data = querystring.parse(body);
         const user = { name: data.name }
         const result = User.create(user, data.password);
@@ -130,7 +143,13 @@ function createAccount(request, response) {
 }
 
 function logIn(request, response) {
-    handlePostRequest(request, response, body => {
+    handlePostRequest(request, response, (error, body) => {
+        if (error) {
+            console.error(error.message);
+            response.statusCode = error.statusCode;
+            response.end(error.message);
+            return;
+        }
         const data = querystring.parse(body);
         const sessionID = User.logIn(data.name, data.password);
         const location = (sessionID) ? '/' : request.headers.referer;
