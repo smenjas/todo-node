@@ -32,7 +32,7 @@ const server = http.createServer((request, response) => {
         case '/':
             response.statusCode = 200;
             response.setHeader('Content-Type', 'text/html');
-            content = createTasksHTML();
+            content = createTasksHTML(name);
             break;
         case '/client.js':
             response.statusCode = 200;
@@ -169,9 +169,28 @@ function createHTML(title, body, headers = '') {
     return HTML.create(title, body, headers, 'en-us');
 }
 
-function createTasksHTML() {
-    const body = '<form id="tasks">\n<ul></ul>\n</form>';
-    const headers = HTML.createExternalJS('client.js');
+function createNavHTML(name) {
+    let html = '<nav>';
+    html += '<ul>';
+    if (name) {
+        html += `<li>Logged in as: ${name}</li>`;
+        html += '<li><a href="/logout">Log Out</a></li>';
+    } else {
+        html += '<li><a href="/create-account">Create Account</a></li>';
+        html += '<li><a href="/login">Log In</a></li>';
+    }
+    html += '</ul>';
+    html += '</nav>';
+    return html;
+}
+
+function createTasksHTML(name) {
+    let body = createNavHTML(name);
+    let headers = '';
+    if (name) {
+        body += '<form id="tasks">\n<ul></ul>\n</form>';
+        headers = HTML.createExternalJS('client.js');
+    }
     return createHTML("ToDo: Node", body, headers);
 }
 
