@@ -78,9 +78,13 @@ const server = http.createServer((request, response) => {
             response.setHeader('Content-Type', 'image/jpeg');
             content = fs.readFileSync('../public/img/404.jpg');
             break;
+        case '/favicon.ico':
+            response.statusCode = 200;
+            response.setHeader('Content-Type', 'image/vnd');
+            content = fs.readFileSync(`../public/img${path}`);
+            break;
         case '/favicon-16.png':
         case '/favicon-32.png':
-        case '/favicon-48.png':
         case '/favicon-180.png':
         case '/favicon-192.png':
         case '/favicon-512.png':
@@ -205,7 +209,8 @@ function logOut(request, response) {
 
 function createHTML(title, body, headers = '') {
     headers = HTML.createExternalCSS('main.css') + headers;
-    for (const size of [16, 32, 48, 180, 192, 512]) {
+    headers += HTML.createFavicon(`/favicon.ico`, `48x48`, 'vnd');
+    for (const size of [16, 32, 180, 192, 512]) {
         headers += HTML.createFavicon(`/favicon-${size}.png`, `${size}x${size}`);
     }
     return HTML.create(title, body, headers, 'en-us');
