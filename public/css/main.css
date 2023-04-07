@@ -10,6 +10,22 @@ a:visited {
     color: #505;
 }
 
+header {
+    display: flex;
+    flex-wrap: wrap;
+    width: calc(100vw - 3rem);
+}
+header h1,
+header nav {
+    margin: 0 0 1rem 0;
+}
+header h1 {
+    flex-grow: 1;
+}
+header nav ul {
+    margin: 0;
+}
+
 fieldset {
     border: none;
 }

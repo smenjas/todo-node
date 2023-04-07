@@ -195,7 +195,6 @@ function logOut(request, response) {
 
 function createHTML(title, body, headers = '') {
     headers = HTML.createExternalCSS('main.css') + headers;
-    body = `<h1>${title}</h1>\n${body}`;
     return HTML.create(title, body, headers, 'en-us');
 }
 
@@ -215,19 +214,24 @@ function createNavHTML(name) {
 }
 
 function createTasksHTML(name) {
-    let body = createNavHTML(name);
+    let title = "ToDo: Node";
+    let body = "<header>";
+    body += `<h1>${title}</h1>`;
+    body += createNavHTML(name);
+    body += "</header>";
     let headers = '';
     if (name) {
         body += '<form id="tasks">\n<ul></ul>\n</form>';
         headers = HTML.createExternalJS('client.js');
     }
-    return createHTML("ToDo: Node", body, headers);
+    return createHTML(title, body, headers);
 }
 
 function createLoginHTML(title = "Log In", action = 'login') {
     const size = 30;
     const max = 63;
-    const body = `<form method="post" action="${action}" id="${action}">
+    const body = `<header><h1>${title}</h1></header>
+<form method="post" action="${action}" id="${action}">
 <input size="${size}" maxlength="${max}" placeholder="username" type="text" name="name" required><br>
 <input size="${size}" maxlength="${max}" placeholder="password" type="password" name="password" required><br>
 <button type="submit">${title}</button>
