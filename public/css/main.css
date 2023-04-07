@@ -81,4 +81,7 @@ input {
         background: #222;
         color: white;
     }
+    button {
+        background-color: #eee;
+    }
 }
