@@ -15,6 +15,7 @@ function addTask(tasks, task) {
 
     task = task.substring(0, maxLength);
     tasks.push(task);
+    uploadTasks(tasks);
     return tasks;
 }
 
@@ -36,6 +37,7 @@ function updateTask(tasks, taskID, task) {
     }
 
     tasks[taskID] = task;
+    uploadTasks(tasks);
     return tasks;
 }
 
@@ -46,6 +48,7 @@ function deleteTask(tasks, taskID) {
     }
 
     tasks.splice(taskID, 1);
+    uploadTasks(tasks);
     return tasks;
 }
 
@@ -60,7 +63,6 @@ function showTask(taskList, tasks, task, taskID) {
     button.addEventListener('click', event => {
         const taskID = event.target.id.split('-')[1];
         tasks = deleteTask(tasks, taskID);
-        uploadTasks(tasks);
         showTasks(tasks);
     });
 
@@ -185,7 +187,6 @@ form.onsubmit = (event) => {
             const taskID = input.id.split('-')[1];
             tasks = updateTask(tasks, taskID, input.value);
         }
-        uploadTasks(tasks);
         showTasks(tasks);
     });
 }
