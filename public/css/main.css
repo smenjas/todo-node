@@ -35,7 +35,7 @@ input {
 }
 
 @media print {
-    h1, button, li:first-child {
+    h1, button, nav, #tasks li:first-child {
         display: none;
     }
     input {
