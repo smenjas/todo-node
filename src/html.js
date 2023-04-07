@@ -27,6 +27,12 @@ ${body}
         return `<script src="${src}" defer></script>\n`;
     }
 
+    static createFavicon(href, sizes = null, format = 'png') {
+        href = HTML.escape(href);
+        const sizesAttr = (sizes) ? ` sizes="${sizes}"` : '';
+        return `<link rel="icon" type="image/${format}" href="${href}"${sizesAttr}>`;
+    }
+
     static escape(str) {
        return str.replaceAll('&', '&amp;')
            .replaceAll('<', '&lt;')
