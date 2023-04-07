@@ -139,7 +139,7 @@ function uploadTasks(request, response, name) {
         const bytes = Buffer.byteLength(body);
         console.log(tasks, bytes);
         Task.setTasks(name, tasks);
-        response.end(`Received ${bytes} bytes.`);
+        response.end(`Server received ${bytes} bytes.`);
     });
 }
 
