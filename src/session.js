@@ -28,17 +28,17 @@ module.exports = class Session {
         if (sessionID === undefined) {
             return;
         }
-        const sessions = User.getSessions();
+        const sessions = Session.getAll();
         if (!(sessionID in sessions)) {
             console.log("sessionID not found:", sessionID);
             return;
         }
         delete sessions[sessionID];
-        User.setSessions(sessions);
+        Session.setAll(sessions);
     }
 
     static create(name) {
-        const sessions = User.getSessions();
+        const sessions = Session.getAll();
         let sessionID = '';
         do {
             sessionID = crypto.randomBytes(16).toString('base64');
@@ -49,7 +49,7 @@ module.exports = class Session {
             name: name,
             expires: expires,
         };
-        User.setSessions(sessions);
+        Session.setAll(sessions);
         return {
             ID: sessionID,
             expires: expires,
