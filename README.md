@@ -12,3 +12,18 @@ the Node.js runtime.
 
 ![ToDo app screenshot - light mode](screenshots/todo-light.png)
 ![ToDo app screenshot - dark mode](screenshots/todo-dark.png)
+
+## Setup
+To run this yourself, you will need to install Node.js on your operating
+system. Then, install `nodemon` globally, with:
+```sh
+npm install -g nodemon
+```
+Finally, run the Node server with:
+```sh
+cd src
+nodemon .
+```
+`nodemon` is an alternative the `node` command that automatically restarts the
+server when you make changes to the source code, so you don't have to restart
+the server manually.
