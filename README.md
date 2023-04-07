@@ -9,3 +9,6 @@ the Node.js runtime.
   provides itself
 - No dev tools except Git, an editor, a web browser, and
   [nodemon](https://www.npmjs.com/package/nodemon)
+
+![ToDo app screenshot - light mode](screenshots/todo-light.png)
+![ToDo app screenshot - dark mode](screenshots/todo-dark.png)
