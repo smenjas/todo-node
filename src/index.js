@@ -85,7 +85,7 @@ const server = http.createServer((request, response) => {
         case '/favicon-192.png':
         case '/favicon-512.png':
             response.statusCode = 200;
-            response.setHeader('Content-Type', 'image/jpeg');
+            response.setHeader('Content-Type', 'image/png');
             content = fs.readFileSync(`../public/img${path}`);
             break;
         default:
