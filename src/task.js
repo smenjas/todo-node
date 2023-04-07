@@ -9,7 +9,8 @@ module.exports = class Task {
             return JSON.parse(json);
         }
         catch (e) {
-            console.log(e);
+            const error = (e.code === 'ENOENT') ? `${name} has no tasks yet.` : e;
+            console.log(error);
         }
 
         return [];
