@@ -51,7 +51,10 @@ input {
 }
 
 @media print {
-    h1, button, nav, #tasks li:first-child {
+    h1,
+    button,
+    nav,
+    #tasks li:first-child {
         display: none;
     }
     input {
@@ -78,10 +81,12 @@ input {
     }
     button, input {
         border-color: white;
-        background: #222;
-        color: white;
     }
     button {
         background-color: #eee;
+    }
+    input {
+        background: #222;
+        color: white;
     }
 }
