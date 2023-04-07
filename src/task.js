@@ -12,7 +12,7 @@ module.exports = class Task {
             console.log(e);
         }
 
-        return {};
+        return [];
     }
 
     static setTasks(name, tasks) {
