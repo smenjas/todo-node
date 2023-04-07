@@ -124,8 +124,20 @@ function describeHttpRequestState(readyState) {
 
 function handleHttpResponse() {
     try {
+        if ((httpRequest.status === 0 && httpRequest.readyState === XMLHttpRequest.OPENED) ||
+            (httpRequest.status === 200 && httpRequest.readyState !== XMLHttpRequest.DONE)) {
+            // No need to spam the console for nominal requests in progress.
+            return;
+        }
         const requestStatus = describeHttpRequestState(httpRequest.readyState);
-        console.log(`HTTP ${httpRequest.status} ${httpRequest.statusText}, ${requestStatus} ${httpRequest.responseText}`);
+        const responseText = (httpRequest.responseText.length > 128) ?
+            httpRequest.responseText.substring(0, 128) + "...":
+            httpRequest.responseText;
+        let logMessage = `${httpRequest.readyState} ${requestStatus} ${responseText}`;
+        if (httpRequest.status !== 0) {
+            logMessage = `HTTP ${httpRequest.status} ${httpRequest.statusText}, ${logMessage}`;
+        }
+        console.log(logMessage);
     }
     catch (e) {
         console.log("Caught Exception:", e.description);
@@ -134,14 +146,13 @@ function handleHttpResponse() {
 
 function downloadTasks() {
     httpRequest = new XMLHttpRequest();
-    //httpRequest.onreadystatechange = handleHttpResponse;
+    httpRequest.onreadystatechange = handleHttpResponse;
     httpRequest.open("POST", `http://${hostname}:${port}/download-tasks`, true);
     httpRequest.onload = () => {
         if (httpRequest.readyState !== XMLHttpRequest.DONE) {
             return;
         }
         if (httpRequest.status !== 200) {
-            console.log(httpRequest.statusText);
             return;
         }
         tasks = JSON.parse(httpRequest.responseText);
