@@ -1,8 +1,11 @@
 'use strict';
 
+const hostname = '127.0.0.1';
+const port = 3000;
 const inputSize = 70;
 const maxLength = 70;
 let httpRequest;
+let tasks;
 
 function addTask(tasks, task) {
     task = task.trim();
@@ -12,7 +15,6 @@ function addTask(tasks, task) {
 
     task = task.substring(0, maxLength);
     tasks.push(task);
-    localStorage.setItem('tasks', JSON.stringify(tasks));
     return tasks;
 }
 
@@ -34,7 +36,6 @@ function updateTask(tasks, taskID, task) {
     }
 
     tasks[taskID] = task;
-    localStorage.setItem('tasks', JSON.stringify(tasks));
     return tasks;
 }
 
@@ -45,7 +46,6 @@ function deleteTask(tasks, taskID) {
     }
 
     tasks.splice(taskID, 1);
-    localStorage.setItem('tasks', JSON.stringify(tasks));
     return tasks;
 }
 
@@ -60,7 +60,7 @@ function showTask(taskList, tasks, task, taskID) {
     button.addEventListener('click', event => {
         const taskID = event.target.id.split('-')[1];
         tasks = deleteTask(tasks, taskID);
-        backupTasks(tasks);
+        uploadTasks(tasks);
         showTasks(tasks);
     });
 
@@ -106,7 +106,7 @@ function showTasks(tasks) {
 }
 
 function describeHttpRequestState(readyState) {
-    switch (httpRequest.readyState) {
+    switch (readyState) {
         case XMLHttpRequest.UNSENT:
             return "AJAX connection has not been opened yet.";
         case XMLHttpRequest.OPENED:
@@ -202,20 +202,36 @@ function handleHttpResponse() {
     }
 };
 
-function backupTasks(tasks) {
-    const hostname = '127.0.0.1';
-    const port = 3000;
+function downloadTasks() {
+    httpRequest = new XMLHttpRequest();
+    //httpRequest.onreadystatechange = handleHttpResponse;
+    httpRequest.open("POST", `http://${hostname}:${port}/download-tasks`, true);
+    httpRequest.onload = () => {
+        if (httpRequest.readyState !== XMLHttpRequest.DONE) {
+            return;
+        }
+        if (httpRequest.status !== 200) {
+            console.log(httpRequest.statusText);
+            return;
+        }
+        tasks = JSON.parse(httpRequest.responseText);
+        showTasks(tasks);
+    };
+    httpRequest.onerror = () => {
+        console.error(httpRequest.statusText);
+    }
+    httpRequest.send();
+}
+
+function uploadTasks(tasks) {
     httpRequest = new XMLHttpRequest();
     httpRequest.onreadystatechange = handleHttpResponse;
-    httpRequest.open("POST", `http://${hostname}:${port}/backup-tasks`, true);
+    httpRequest.open("POST", `http://${hostname}:${port}/upload-tasks`, true);
     httpRequest.setRequestHeader("Content-Type", "application/json");
     httpRequest.send(JSON.stringify(tasks));
 }
 
-//localStorage.setItem('tasks', '[]'); // Clear all tasks.
-let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-
-showTasks(tasks);
+downloadTasks();
 
 const form = document.querySelector('form#tasks');
 form.onsubmit = (event) => {
@@ -228,7 +244,7 @@ form.onsubmit = (event) => {
             const taskID = input.id.split('-')[1];
             tasks = updateTask(tasks, taskID, input.value);
         }
-        backupTasks(tasks);
+        uploadTasks(tasks);
         showTasks(tasks);
     });
 }

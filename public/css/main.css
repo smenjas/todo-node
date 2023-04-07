@@ -3,6 +3,12 @@ body {
     background: white;
     color: black;
 }
+a {
+    color: #005;
+}
+a:visited {
+    color: #505;
+}
 
 fieldset {
     border: none;
@@ -48,7 +54,12 @@ input {
         background: black;
         color: white;
     }
-
+    a {
+        color: #aaf;
+    }
+    a:visited {
+        color: #faf;
+    }
     button, input {
         border-color: white;
         background: #222;
