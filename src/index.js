@@ -83,9 +83,9 @@ const server = http.createServer((request, response) => {
             response.setHeader('Content-Type', 'image/vnd');
             content = fs.readFileSync(`../public/img${path}`);
             break;
+        case '/apple-touch-icon.png':
         case '/favicon-16.png':
         case '/favicon-32.png':
-        case '/favicon-180.png':
         case '/favicon-192.png':
         case '/favicon-512.png':
             response.statusCode = 200;
@@ -209,6 +209,7 @@ function logOut(request, response) {
 
 function createHTML(title, body, headers = '') {
     headers = HTML.createExternalCSS('main.css') + headers;
+    headers += HTML.createFavicon(`/apple-touch-icon.png`, `180x180`);
     headers += HTML.createFavicon(`/favicon.ico`, `48x48`, 'vnd');
     for (const size of [16, 32, 180, 192, 512]) {
         headers += HTML.createFavicon(`/favicon-${size}.png`, `${size}x${size}`);

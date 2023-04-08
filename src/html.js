@@ -30,7 +30,8 @@ ${body}
     static createFavicon(href, sizes = null, format = 'png') {
         href = HTML.escape(href);
         const sizesAttr = (sizes) ? ` sizes="${sizes}"` : '';
-        return `<link rel="icon" type="image/${format}" href="${href}"${sizesAttr}>`;
+        const rel = (href.includes('apple-touch-icon')) ? 'apple-touch-icon' : 'icon';
+        return `<link rel="${rel}" type="image/${format}" href="${href}"${sizesAttr}>`;
     }
 
     static escape(str) {
