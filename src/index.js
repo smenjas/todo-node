@@ -95,7 +95,7 @@ const server = http.createServer((request, response) => {
         default:
             response.statusCode = 404;
             response.setHeader('Content-Type', 'text/html');
-            content = fs.readFileSync('../public/html/404.html', 'utf8');
+            content = create404HTML();
             break;
     }
 
@@ -214,6 +214,13 @@ function createHTML(title, body, headers = '') {
         headers += HTML.createFavicon(`/favicon-${size}.png`, `${size}x${size}`);
     }
     return HTML.create(title, body, headers, 'en-us');
+}
+
+function create404HTML() {
+    const title = "HTTP 404: Page Not Found";
+    const body = `<header><h1>${title}</h1></header>
+<img src="404.jpg" alt="John Travolta as Vincent Vega in the movie Pulp Fiction expresses confusion.">`;
+    return createHTML(title, body);
 }
 
 function createNavHTML(name) {
