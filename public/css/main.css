@@ -34,12 +34,11 @@ button, input {
     background: #eee;
     color: black;
     font-size: 1.5rem;
+    padding: 0.3rem;
 }
 button {
     height: 2.5rem;
-}
-input {
-    padding: 0.3rem;
+    width: 2.5rem;
 }
 
 #tasks ul {
@@ -48,6 +47,10 @@ input {
 }
 #tasks input {
     width: calc(100vw - 6rem);
+}
+#tasks li {
+    display: flex;
+    flex-wrap: nowrap;
 }
 
 @media print {
@@ -83,7 +86,7 @@ input {
         border-color: white;
     }
     button {
-        background-color: #eee;
+        background: #eee;
     }
     input {
         background: #222;
