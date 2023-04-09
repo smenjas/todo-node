@@ -52,6 +52,9 @@ button {
     display: flex;
     flex-wrap: nowrap;
 }
+#tasks li:hover {
+    outline: 5px outset black;
+}
 
 @media print {
     h1,
@@ -91,5 +94,8 @@ button {
     input {
         background: #222;
         color: white;
+    }
+    #tasks li:hover {
+        outline-color: white;
     }
 }
