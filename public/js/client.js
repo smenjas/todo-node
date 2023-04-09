@@ -52,6 +52,16 @@ function deleteTask(tasks, taskID) {
     return tasks;
 }
 
+function createInput(name, value = "") {
+    const input = document.createElement('input');
+    input.setAttribute('name', name);
+    input.setAttribute('id', name);
+    input.setAttribute('size', inputSize);
+    input.setAttribute('maxlength', maxLength);
+    input.setAttribute('value', value);
+    return input;
+}
+
 function showTask(taskList, tasks, task, taskID) {
     const button = document.createElement('button');
     //button.innerHTML = '❌';
@@ -66,12 +76,7 @@ function showTask(taskList, tasks, task, taskID) {
         showTasks(tasks);
     });
 
-    const input = document.createElement('input');
-    input.setAttribute('name', `task-${taskID}`);
-    input.setAttribute('id', `task-${taskID}`);
-    input.setAttribute('size', inputSize);
-    input.setAttribute('maxlength', maxLength);
-    input.setAttribute('value', task);
+    const input = createInput(`task-${taskID}`, task);
 
     const li = document.createElement('li');
     li.append(input, button);
@@ -85,11 +90,7 @@ function showNewTask(taskList) {
     button.setAttribute('type', 'submit');
     button.setAttribute('title', 'Add Task');
 
-    const input = document.createElement('input');
-    input.setAttribute('name', 'new-task');
-    input.setAttribute('id', 'new-task');
-    input.setAttribute('size', inputSize);
-    input.setAttribute('maxlength', maxLength);
+    const input = createInput('new-task');
 
     const li = document.createElement('li');
     li.append(input, button);
