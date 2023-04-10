@@ -22,7 +22,7 @@ module.exports = class User {
         }
 
         if (!User.validatePassword(password)) {
-            const error = "The password contains illegal characters.";
+            const error = "Invalid password";
             console.log(error);
             return { success: false, errors: { password: error } };
         }
@@ -118,6 +118,6 @@ module.exports = class User {
 
     static validatePassword(password) {
         // Restrict passwords to ASCII printable characters.
-        return /^[\x20-\x7E]+$/.test(password);
+        return /^[\x20-\x7E]{16,}$/.test(password);
     }
 }
