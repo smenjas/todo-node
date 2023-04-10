@@ -46,6 +46,7 @@ button {
     font-size: 1.5rem;
 }
 #tasks input {
+    max-width: 50rem;
     width: calc(100vw - 6rem);
 }
 #tasks li {
