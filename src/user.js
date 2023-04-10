@@ -15,7 +15,7 @@ module.exports = class User {
             return { success: false, errors: { name: error } };
         }
 
-        if (!/^[\w-]+$/.test(user.name)) {
+        if (!User.validateName(user.name)) {
             const error =`The username ${user.name} contains illegal characters.`;
             console.log(error);
             return { success: false, errors: { name: error } };
@@ -103,5 +103,10 @@ module.exports = class User {
         const keylen = 64;
         password = password.toString().normalize();
         return crypto.pbkdf2Sync(password, salt, iterations, keylen, 'sha512').toString('hex');
+    }
+
+    static validateName(name) {
+        // Restrict usernames to Latin letters, Hindu-Arabic numerals, underscore, and hyphen.
+        return /^[\w-]+$/.test(name);
     }
 }
