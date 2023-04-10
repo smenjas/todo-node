@@ -7,6 +7,7 @@ const Session = require('./session.js');
 
 module.exports = class User {
     static create(user, password) {
+        user.name = user.name.toLowerCase();
         const users = User.getUsers();
 
         if (user.name in users) {
