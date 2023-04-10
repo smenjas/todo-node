@@ -21,6 +21,12 @@ module.exports = class User {
             return { success: false, errors: { name: error } };
         }
 
+        if (!User.validatePassword(password)) {
+            const error = "The password contains illegal characters.";
+            console.log(error);
+            return { success: false, errors: { password: error } };
+        }
+
         user.salt = User.createSalt();
         user.hash = User.hashPassword(password, user.salt);
         user.created = Date.now();
@@ -108,5 +114,10 @@ module.exports = class User {
     static validateName(name) {
         // Restrict usernames to Latin letters, Hindu-Arabic numerals, underscore, and hyphen.
         return /^[\w-]+$/.test(name);
+    }
+
+    static validatePassword(password) {
+        // Restrict passwords to ASCII printable characters.
+        return /^[\x20-\x7E]+$/.test(password);
     }
 }
