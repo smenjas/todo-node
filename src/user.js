@@ -16,7 +16,7 @@ module.exports = class User {
         }
 
         if (!User.validateName(user.name)) {
-            const error =`The username ${user.name} contains illegal characters.`;
+            const error = "Invalid username";
             console.log(error);
             return { success: false, errors: { name: error } };
         }
@@ -113,7 +113,7 @@ module.exports = class User {
 
     static validateName(name) {
         // Restrict usernames to Latin letters, Hindu-Arabic numerals, underscore, and hyphen.
-        return /^[\w-]+$/.test(name);
+        return /^[\w-]{1,15}$/.test(name);
     }
 
     static validatePassword(password) {
