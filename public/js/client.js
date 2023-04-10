@@ -64,7 +64,6 @@ function createInput(name, value = "") {
 
 function showTask(taskList, tasks, task, taskID) {
     const button = document.createElement('button');
-    //button.innerHTML = '❌';
     button.innerHTML = '🗑️';
     button.setAttribute('type', 'button');
     button.setAttribute('class', 'delete');
@@ -86,9 +85,10 @@ function showTask(taskList, tasks, task, taskID) {
 
 function showNewTask(taskList) {
     const button = document.createElement('button');
-    button.innerHTML = '&#10133;';
+    button.innerHTML = '+';
     button.setAttribute('type', 'submit');
     button.setAttribute('title', 'Add Task');
+    button.setAttribute('id', 'add-task');
 
     const input = createInput('new-task');
 

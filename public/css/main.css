@@ -41,6 +41,12 @@ button {
     width: 2.5rem;
 }
 
+button#add-task {
+    font-size: 2.0rem;
+    font-weight: bold;
+    padding: 0;
+}
+
 #tasks ul {
     display: table-row;
     font-size: 1.5rem;
@@ -88,11 +94,6 @@ button {
     }
     button, input {
         border-color: white;
-    }
-    button {
-        background: #eee;
-    }
-    input {
         background: #222;
         color: white;
     }
