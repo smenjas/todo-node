@@ -15,7 +15,7 @@ module.exports = class User {
             return { success: false, errors: { name: error } };
         }
 
-        if (!/[\w-]/.test(user.name)) {
+        if (!/^[\w-]+$/.test(user.name)) {
             const error =`The username ${user.name} contains illegal characters.`;
             console.log(error);
             return { success: false, errors: { name: error } };
