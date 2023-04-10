@@ -1,6 +1,6 @@
 {
   "name": "todo-node",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "A to-do app built with Node.js",
   "main": "index.js",
   "scripts": {
