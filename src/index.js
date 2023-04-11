@@ -271,8 +271,8 @@ function createLoginHTML(title = "Log In", action = 'login', headers = '') {
     const size = 30;
     const body = `<header><h1>${title}</h1></header>
 <form method="post" action="${action}" id="${action}">
-<input size="${size}" maxlength="15" placeholder="username" type="text" name="name" required><br>
-<input size="${size}" maxlength="64" placeholder="password" type="password" name="password" required><br>
+<input size="${size}" maxlength="${Common.nameMax}" placeholder="username" type="text" name="name" required><br>
+<input size="${size}" maxlength="${Common.passMax}" placeholder="password" type="password" name="password" required><br>
 <button type="submit">${title}</button>
 </form>`;
     return createHTML(title, body, headers);
