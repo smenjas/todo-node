@@ -1,10 +1,7 @@
-'use strict';
+import fs from 'fs';
+import Common from './common.js';
 
-const fs = require('fs');
-
-module.exports = class Task {
-    static maxLength = 70;
-
+export default class Task {
     static getTasks(name) {
         try {
             const json = fs.readFileSync(`../data/tasks/${name}.json`, 'utf8');
@@ -20,7 +17,7 @@ module.exports = class Task {
 
     static setTasks(name, tasks) {
         for (const index in tasks) {
-            tasks[index] = tasks[index].substring(0, Task.maxLength);
+            tasks[index] = tasks[index].substring(0, Common.taskMax);
         }
         fs.writeFile(`../data/tasks/${name}.json`, JSON.stringify(tasks), error => {
             if (error) {
@@ -28,4 +25,4 @@ module.exports = class Task {
             }
         });
     }
-}
+};

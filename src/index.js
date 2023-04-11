@@ -1,16 +1,13 @@
 'use strict';
 
-const fs = require('fs');
-const http = require('http');
-const url = require('url');
-const querystring = require('querystring');
-
-const HTML = require('./html.js');
-const Task = require('./task.js');
-const User = require('./user.js');
-
-const hostname = '127.0.0.1';
-const port = 3000;
+import fs from 'fs';
+import http from 'http';
+import url from 'url';
+import querystring from 'querystring';
+import Common from './common.js';
+import HTML from './html.js';
+import Task from './task.js';
+import User from './user.js';
 
 const server = http.createServer((request, response) => {
     const path = url.parse(request.url).pathname;
@@ -35,9 +32,15 @@ const server = http.createServer((request, response) => {
             content = createTasksHTML(name);
             break;
         case '/client.js':
+        case '/create-account.js':
             response.statusCode = 200;
             response.setHeader('Content-Type', 'text/javascript');
-            content = fs.readFileSync('../public/js/client.js', 'utf8');
+            content = fs.readFileSync(`../public/js${path}`, 'utf8');
+            break;
+        case '/common.js':
+            response.statusCode = 200;
+            response.setHeader('Content-Type', 'text/javascript');
+            content = fs.readFileSync('common.js', 'utf8');
             break;
         case '/main.css':
             response.statusCode = 200;
@@ -104,8 +107,8 @@ const server = http.createServer((request, response) => {
     response.end(content);
 });
 
-server.listen(port, hostname, () => {
-    console.log(`Server running at http://${hostname}:${port}/`);
+server.listen(Common.port, Common.hostname, () => {
+    console.log(`Server running at ${Common.server}/`);
 });
 
 function handlePostRequest(request, response, callback) {
@@ -259,12 +262,12 @@ function createTasksHTML(name) {
     let headers = '';
     if (name) {
         body += '<form id="tasks">\n<ul></ul>\n</form>';
-        headers = HTML.createExternalJS('client.js');
+        headers = HTML.createExternalJS('client.js', true);
     }
     return createHTML(title, body, headers);
 }
 
-function createLoginHTML(title = "Log In", action = 'login') {
+function createLoginHTML(title = "Log In", action = 'login', headers = '') {
     const size = 30;
     const body = `<header><h1>${title}</h1></header>
 <form method="post" action="${action}" id="${action}">
@@ -272,9 +275,11 @@ function createLoginHTML(title = "Log In", action = 'login') {
 <input size="${size}" maxlength="64" placeholder="password" type="password" name="password" required><br>
 <button type="submit">${title}</button>
 </form>`;
-    return createHTML(title, body);
+    return createHTML(title, body, headers);
 }
 
 function createAccountHTML() {
-    return createLoginHTML("Create an Account", 'create-account');
+    let headers = HTML.createExternalJS('create-account.js', true);
+    headers += HTML.createExternalJS('common.js', true);
+    return createLoginHTML("Create an Account", 'create-account', headers);
 }

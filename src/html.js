@@ -1,6 +1,4 @@
-'use strict';
-
-module.exports = class HTML {
+export default class HTML {
     static create(title = '', body = '', headers = '', language = 'en') {
         title = HTML.escape(title);
         return `<!DOCTYPE html>
@@ -22,9 +20,10 @@ ${body}
         return `<link rel="stylesheet" href="${href}">\n`;
     }
 
-    static createExternalJS(src) {
+    static createExternalJS(src, module = false) {
         src = HTML.escape(src);
-        return `<script src="${src}" defer></script>\n`;
+        const moduleAttr = (module) ? ' type="module"' : '';
+        return `<script src="${src}"${moduleAttr} defer></script>\n`;
     }
 
     static createFavicon(href, sizes = null, format = 'png') {
@@ -41,4 +40,4 @@ ${body}
            .replaceAll('"', '&quot;')
            .replaceAll("'", '&#39;');
     }
-}
+};

@@ -1,11 +1,9 @@
-'use strict';
+import fs from 'fs';
+import crypto from 'crypto';
+import Common from './common.js';
+import Session from './session.js';
 
-const fs = require('fs');
-const crypto = require('crypto');
-
-const Session = require('./session.js');
-
-module.exports = class User {
+export default class User {
     static create(user, password) {
         user.name = user.name.toLowerCase();
         const users = User.getUsers();
@@ -16,13 +14,13 @@ module.exports = class User {
             return { success: false, errors: { name: error } };
         }
 
-        if (!User.validateName(user.name)) {
+        if (!Common.validateName(user.name)) {
             const error = "Invalid username";
             console.log(error);
             return { success: false, errors: { name: error } };
         }
 
-        if (!User.validatePassword(password)) {
+        if (!Common.validatePassword(password)) {
             const error = "Invalid password";
             console.log(error);
             return { success: false, errors: { password: error } };
@@ -112,14 +110,4 @@ module.exports = class User {
         password = password.toString().normalize();
         return crypto.pbkdf2Sync(password, salt, iterations, keylen, 'sha512').toString('hex');
     }
-
-    static validateName(name) {
-        // Restrict usernames to Latin letters, Hindu-Arabic numerals, underscore, and hyphen.
-        return /^\w{1,15}$/.test(name);
-    }
-
-    static validatePassword(password) {
-        // Restrict passwords to ASCII printable characters.
-        return /^[\x20-\x7E]{16,}$/.test(password);
-    }
-}
+};

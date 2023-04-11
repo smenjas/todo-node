@@ -1,6 +1,4 @@
-'use strict';
-
-const HTML = require('../src/html.js');
+import HTML from '../src/html.js';
 
 const tests = {};
 
@@ -44,4 +42,4 @@ tests["Favicons get created correctly."] = () => {
     return failures;
 };
 
-module.exports = tests;
+export default tests;
