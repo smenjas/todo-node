@@ -10,7 +10,6 @@ tests["Salt meets requirements."] = () => {
     if (salt.length !== 32) {
         failures.push(`Salt length is: ${salt.length}`);
     }
-    return failures;
     if (!/^[0-9a-f]+$/.test(salt)) {
         failures.push("Salt contains non-hexadecimal digits.");
     }

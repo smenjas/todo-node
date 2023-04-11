@@ -1,9 +1,12 @@
 'use strict';
 
+const htmlTests = require('./tests/html.js');
+const sessionTests = require('./tests/session.js');
 const userTests = require('./tests/user.js');
 
+let totalFailures = 0;
+
 function runTests(tests) {
-    let totalFailures = 0;
     for (const [name, test] of Object.entries(tests)) {
         const failures = test();
         totalFailures += failures.length;
@@ -12,11 +15,14 @@ function runTests(tests) {
             console.log(`\t${failure}`);
         }
     }
-    if (totalFailures) {
-        console.log(totalFailures, "tests failed.");
-    } else {
-        console.log("All tests passed.");
-    }
 }
 
+runTests(htmlTests);
+runTests(sessionTests);
 runTests(userTests);
+
+if (totalFailures) {
+    console.log(totalFailures, "tests failed.");
+} else {
+    console.log("All tests passed.");
+}
