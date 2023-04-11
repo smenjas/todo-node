@@ -10,6 +10,12 @@ the Node.js runtime.
 - No dev tools except Git, an editor, a web browser, and
   [nodemon](https://www.npmjs.com/package/nodemon)
 
+## Goals
+- [x] [As simple as possible, but not simpler](https://quoteinvestigator.com/2011/05/13/einstein-simple/)
+- [x] Create, read, update, and delete tasks
+- [x] Store tasks on the server
+- [x] Provide secure authentication
+
 ![ToDo app screenshot - light mode](screenshots/todo-light.png)
 ![ToDo app screenshot - dark mode](screenshots/todo-dark.png)
 
