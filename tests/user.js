@@ -31,11 +31,9 @@ tests["Username requirements are enforced."] = () => {
 
     // Get the printable, non-word ASCII decimals.
     const decimals = [];
-    for (let d = 32; d <= 44; d++) {
+    for (let d = 32; d <= 47; d++) {
         decimals.push(d);
     }
-    decimals.push(46);
-    decimals.push(47);
     for (let d = 58; d <= 64; d++) {
         decimals.push(d);
     }
@@ -55,6 +53,9 @@ tests["Username requirements are enforced."] = () => {
 
     const names = {
         '': false,
+        '1': true,
+        'A': true,
+        '🤠': false,
         'Alice': true,
         'Αλίκη': false, // Greek
         'Алиса': false, // Russian

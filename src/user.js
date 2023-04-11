@@ -115,7 +115,7 @@ module.exports = class User {
 
     static validateName(name) {
         // Restrict usernames to Latin letters, Hindu-Arabic numerals, underscore, and hyphen.
-        return /^[\w-]{1,15}$/.test(name);
+        return /^\w{1,15}$/.test(name);
     }
 
     static validatePassword(password) {
