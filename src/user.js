@@ -44,7 +44,7 @@ module.exports = class User {
 
         if (!(name in users)) {
             console.log(`The username ${name} does not exist, log in failed.`);
-            return '';
+            return {};
         }
 
         const user = users[name];
@@ -52,7 +52,7 @@ module.exports = class User {
 
         if (hash !== user.hash) {
             console.log(`Incorrect password, log in failed.`);
-            return '';
+            return {};
         }
 
         return Session.create(name);
@@ -94,11 +94,12 @@ module.exports = class User {
     }
 
     static setUsers(users) {
-        fs.writeFile('../data/users.json', JSON.stringify(users), error => {
-            if (error) {
-                console.error(error);
-            }
-        });
+        try {
+            fs.writeFileSync('../data/users.json', JSON.stringify(users));
+        }
+        catch (e) {
+            console.error(error);
+        }
     }
 
     static createSalt() {
