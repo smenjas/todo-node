@@ -1,5 +1,3 @@
-'use strict';
-
 import commonTests from './tests/common.js';
 import htmlTests from './tests/html.js';
 import sessionTests from './tests/session.js';
