@@ -4,12 +4,10 @@ import fs from 'fs';
 import http from 'http';
 import url from 'url';
 import querystring from 'querystring';
+import Common from './common.js';
 import HTML from './html.js';
 import Task from './task.js';
 import User from './user.js';
-
-const hostname = '127.0.0.1';
-const port = 3000;
 
 const server = http.createServer((request, response) => {
     const path = url.parse(request.url).pathname;
@@ -103,8 +101,8 @@ const server = http.createServer((request, response) => {
     response.end(content);
 });
 
-server.listen(port, hostname, () => {
-    console.log(`Server running at http://${hostname}:${port}/`);
+server.listen(Common.port, Common.hostname, () => {
+    console.log(`Server running at ${Common.server}/`);
 });
 
 function handlePostRequest(request, response, callback) {
@@ -258,7 +256,7 @@ function createTasksHTML(name) {
     let headers = '';
     if (name) {
         body += '<form id="tasks">\n<ul></ul>\n</form>';
-        headers = HTML.createExternalJS('client.js');
+        headers = HTML.createExternalJS('client.js', true);
     }
     return createHTML(title, body, headers);
 }

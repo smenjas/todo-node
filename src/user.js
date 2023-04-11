@@ -1,5 +1,6 @@
 import fs from 'fs';
 import crypto from 'crypto';
+import Common from './common.js';
 import Session from './session.js';
 
 export default class User {
@@ -13,13 +14,13 @@ export default class User {
             return { success: false, errors: { name: error } };
         }
 
-        if (!User.validateName(user.name)) {
+        if (!Common.validateName(user.name)) {
             const error = "Invalid username";
             console.log(error);
             return { success: false, errors: { name: error } };
         }
 
-        if (!User.validatePassword(password)) {
+        if (!Common.validatePassword(password)) {
             const error = "Invalid password";
             console.log(error);
             return { success: false, errors: { password: error } };
@@ -108,15 +109,5 @@ export default class User {
         const keylen = 64;
         password = password.toString().normalize();
         return crypto.pbkdf2Sync(password, salt, iterations, keylen, 'sha512').toString('hex');
-    }
-
-    static validateName(name) {
-        // Restrict usernames to Latin letters, Hindu-Arabic numerals, underscore, and hyphen.
-        return /^\w{1,15}$/.test(name);
-    }
-
-    static validatePassword(password) {
-        // Restrict passwords to ASCII printable characters.
-        return /^[\x20-\x7E]{16,}$/.test(password);
     }
 };

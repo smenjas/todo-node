@@ -1,5 +1,6 @@
 'use strict';
 
+import commonTests from './tests/common.js';
 import htmlTests from './tests/html.js';
 import sessionTests from './tests/session.js';
 import userTests from './tests/user.js';
@@ -17,6 +18,7 @@ function runTests(tests) {
     }
 }
 
+runTests(commonTests);
 runTests(htmlTests);
 runTests(sessionTests);
 runTests(userTests);

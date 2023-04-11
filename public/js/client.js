@@ -1,9 +1,5 @@
-'use strict';
+import Common from '/common.js';
 
-const hostname = '127.0.0.1';
-const port = 3000;
-const inputSize = 70;
-const maxLength = 70;
 let httpRequest;
 let tasks;
 
@@ -13,7 +9,7 @@ function addTask(tasks, task) {
         return tasks;
     }
 
-    task = task.substring(0, maxLength);
+    task = task.substring(0, Common.taskMax);
     tasks.push(task);
     uploadTasks(tasks);
     return tasks;
@@ -26,7 +22,7 @@ function updateTask(tasks, taskID, task) {
     }
 
     task = task.trim();
-    task = task.substring(0, maxLength);
+    task = task.substring(0, Common.taskMax);
     if (task === tasks[taskID]) {
         return tasks;
     }
@@ -56,8 +52,8 @@ function createInput(name, value = "") {
     const input = document.createElement('input');
     input.setAttribute('name', name);
     input.setAttribute('id', name);
-    input.setAttribute('size', inputSize);
-    input.setAttribute('maxlength', maxLength);
+    input.setAttribute('size', Common.taskMax);
+    input.setAttribute('maxlength', Common.taskMax);
     input.setAttribute('value', value);
     return input;
 }
@@ -150,7 +146,7 @@ function handleHttpResponse() {
 function downloadTasks() {
     httpRequest = new XMLHttpRequest();
     httpRequest.onreadystatechange = handleHttpResponse;
-    httpRequest.open("POST", `http://${hostname}:${port}/download-tasks`, true);
+    httpRequest.open("POST", `${Common.server}/download-tasks`, true);
     httpRequest.onload = () => {
         if (httpRequest.readyState !== XMLHttpRequest.DONE) {
             return;
@@ -170,7 +166,7 @@ function downloadTasks() {
 function uploadTasks(tasks) {
     httpRequest = new XMLHttpRequest();
     httpRequest.onreadystatechange = handleHttpResponse;
-    httpRequest.open("POST", `http://${hostname}:${port}/upload-tasks`, true);
+    httpRequest.open("POST", `${Common.server}/upload-tasks`, true);
     httpRequest.setRequestHeader("Content-Type", "application/json");
     httpRequest.send(JSON.stringify(tasks));
 }
