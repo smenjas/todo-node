@@ -252,11 +252,9 @@ function createNavHTML(name) {
 }
 
 function createTasksHTML(name) {
-    let title = "ToDo: Node";
-    let body = "<header>";
-    body += `<h1>${title}</h1>`;
-    body += createNavHTML(name);
-    body += "</header>";
+    const title = "ToDo: Node";
+    const nav = createNavHTML(name);
+    let body = `<header><h1>${title}</h1>${nav}</header>`;
     let headers = '';
     if (name) {
         body += '<form id="tasks">\n<ul></ul>\n</form>';
