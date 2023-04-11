@@ -136,7 +136,7 @@ function handleHttpResponse() {
         const responseText = (httpRequest.responseText.length > 128) ?
             httpRequest.responseText.substring(0, 128) + "...":
             httpRequest.responseText;
-        let logMessage = `${httpRequest.readyState} ${requestStatus} ${responseText}`;
+        let logMessage = `${requestStatus} ${responseText}`;
         if (httpRequest.status !== 0) {
             logMessage = `HTTP ${httpRequest.status} ${httpRequest.statusText}, ${logMessage}`;
         }

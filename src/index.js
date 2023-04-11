@@ -157,6 +157,15 @@ function uploadTasks(request, response, name) {
     });
 }
 
+function setSessionCookie(response, session) {
+    if (!session.ID) {
+        return;
+    }
+    const expires = new Date(session.expires).toUTCString();
+    response.setHeader('Set-Cookie', `sessionID=${encodeURIComponent(session.ID)}`);
+    response.setHeader('Expires', expires);
+}
+
 function createAccount(request, response) {
     handlePostRequest(request, response, (error, body) => {
         if (error) {
@@ -168,6 +177,10 @@ function createAccount(request, response) {
         const data = querystring.parse(body);
         const user = { name: data.name }
         const result = User.create(user, data.password);
+        if (result.success) {
+            const session = User.logIn(data.name, data.password);
+            setSessionCookie(response, session);
+        }
         const location = (result.success) ? '/' : request.headers.referer;
         response.statusCode = 302;
         response.setHeader('Location', location);
@@ -185,12 +198,10 @@ function logIn(request, response) {
         }
         const data = querystring.parse(body);
         const session = User.logIn(data.name, data.password);
+        setSessionCookie(response, session);
         const location = (session.ID) ? '/' : request.headers.referer;
-        const expires = new Date(session.expires).toUTCString();
         response.statusCode = 302;
         response.setHeader('Location', location);
-        response.setHeader('Set-Cookie', `sessionID=${encodeURIComponent(session.ID)}`);
-        response.setHeader('Expires', expires);
         response.end();
     });
 }

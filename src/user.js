@@ -7,6 +7,7 @@ const Session = require('./session.js');
 
 module.exports = class User {
     static create(user, password) {
+        user.name = user.name.toLowerCase();
         const users = User.getUsers();
 
         if (user.name in users) {
@@ -15,10 +16,16 @@ module.exports = class User {
             return { success: false, errors: { name: error } };
         }
 
-        if (!/[\w-]/.test(user.name)) {
-            const error =`The username ${user.name} contains illegal characters.`;
+        if (!User.validateName(user.name)) {
+            const error = "Invalid username";
             console.log(error);
             return { success: false, errors: { name: error } };
+        }
+
+        if (!User.validatePassword(password)) {
+            const error = "Invalid password";
+            console.log(error);
+            return { success: false, errors: { password: error } };
         }
 
         user.salt = User.createSalt();
@@ -37,7 +44,7 @@ module.exports = class User {
 
         if (!(name in users)) {
             console.log(`The username ${name} does not exist, log in failed.`);
-            return '';
+            return {};
         }
 
         const user = users[name];
@@ -45,7 +52,7 @@ module.exports = class User {
 
         if (hash !== user.hash) {
             console.log(`Incorrect password, log in failed.`);
-            return '';
+            return {};
         }
 
         return Session.create(name);
@@ -87,11 +94,12 @@ module.exports = class User {
     }
 
     static setUsers(users) {
-        fs.writeFile('../data/users.json', JSON.stringify(users), error => {
-            if (error) {
-                console.error(error);
-            }
-        });
+        try {
+            fs.writeFileSync('../data/users.json', JSON.stringify(users));
+        }
+        catch (e) {
+            console.error(error);
+        }
     }
 
     static createSalt() {
@@ -103,5 +111,15 @@ module.exports = class User {
         const keylen = 64;
         password = password.toString().normalize();
         return crypto.pbkdf2Sync(password, salt, iterations, keylen, 'sha512').toString('hex');
+    }
+
+    static validateName(name) {
+        // Restrict usernames to Latin letters, Hindu-Arabic numerals, underscore, and hyphen.
+        return /^[\w-]{1,15}$/.test(name);
+    }
+
+    static validatePassword(password) {
+        // Restrict passwords to ASCII printable characters.
+        return /^[\x20-\x7E]{16,}$/.test(password);
     }
 }
