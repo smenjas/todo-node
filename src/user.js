@@ -107,7 +107,7 @@ module.exports = class User {
     }
 
     static hashPassword(password, salt) {
-        const iterations = 1000;
+        const iterations = 210000;
         const keylen = 64;
         password = password.toString().normalize();
         return crypto.pbkdf2Sync(password, salt, iterations, keylen, 'sha512').toString('hex');
@@ -115,7 +115,7 @@ module.exports = class User {
 
     static validateName(name) {
         // Restrict usernames to Latin letters, Hindu-Arabic numerals, underscore, and hyphen.
-        return /^[\w-]{1,15}$/.test(name);
+        return /^\w{1,15}$/.test(name);
     }
 
     static validatePassword(password) {
