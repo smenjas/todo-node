@@ -2,8 +2,8 @@ import Common from '/common.js';
 
 function validateInput(element, validate) {
     const colors = {
-        true: 'green',
-        false: 'red',
+        true: '#a6edb2',
+        false: '#842e98',
     };
 
     element.addEventListener('input', event => {
