@@ -1,6 +1,6 @@
 'use strict';
 
-const Session = require('../src/session.js');
+import Session from '../src/session.js';
 
 const tests = {};
 
@@ -13,4 +13,4 @@ tests["Session ID meets requirements."] = () => {
     return failures;
 };
 
-module.exports = tests;
+export default tests;

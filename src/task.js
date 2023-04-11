@@ -1,8 +1,8 @@
 'use strict';
 
-const fs = require('fs');
+import fs from 'fs';
 
-module.exports = class Task {
+export default class Task {
     static maxLength = 70;
 
     static getTasks(name) {
@@ -28,4 +28,4 @@ module.exports = class Task {
             }
         });
     }
-}
+};

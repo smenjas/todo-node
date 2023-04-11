@@ -1,13 +1,12 @@
 'use strict';
 
-const fs = require('fs');
-const http = require('http');
-const url = require('url');
-const querystring = require('querystring');
-
-const HTML = require('./html.js');
-const Task = require('./task.js');
-const User = require('./user.js');
+import fs from 'fs';
+import http from 'http';
+import url from 'url';
+import querystring from 'querystring';
+import HTML from './html.js';
+import Task from './task.js';
+import User from './user.js';
 
 const hostname = '127.0.0.1';
 const port = 3000;

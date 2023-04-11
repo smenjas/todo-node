@@ -1,11 +1,10 @@
 'use strict';
 
-const fs = require('fs');
-const crypto = require('crypto');
+import fs from 'fs';
+import crypto from 'crypto';
+import Session from './session.js';
 
-const Session = require('./session.js');
-
-module.exports = class User {
+export default class User {
     static create(user, password) {
         user.name = user.name.toLowerCase();
         const users = User.getUsers();
@@ -122,4 +121,4 @@ module.exports = class User {
         // Restrict passwords to ASCII printable characters.
         return /^[\x20-\x7E]{16,}$/.test(password);
     }
-}
+};

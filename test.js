@@ -1,8 +1,8 @@
 'use strict';
 
-const htmlTests = require('./tests/html.js');
-const sessionTests = require('./tests/session.js');
-const userTests = require('./tests/user.js');
+import htmlTests from './tests/html.js';
+import sessionTests from './tests/session.js';
+import userTests from './tests/user.js';
 
 let totalFailures = 0;
 

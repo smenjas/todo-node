@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = class HTML {
+export default class HTML {
     static create(title = '', body = '', headers = '', language = 'en') {
         title = HTML.escape(title);
         return `<!DOCTYPE html>
@@ -41,4 +41,4 @@ ${body}
            .replaceAll('"', '&quot;')
            .replaceAll("'", '&#39;');
     }
-}
+};

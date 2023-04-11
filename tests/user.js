@@ -1,6 +1,6 @@
 'use strict';
 
-const User = require('../src/user.js');
+import User from '../src/user.js';
 
 const tests = {};
 
@@ -99,4 +99,4 @@ tests["Password requirements are enforced."] = () => {
     return failures;
 };
 
-module.exports = tests;
+export default tests;

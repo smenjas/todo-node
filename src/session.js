@@ -1,9 +1,9 @@
 'use strict';
 
-const fs = require('fs');
-const crypto = require('crypto');
+import fs from 'fs';
+import crypto from 'crypto';
 
-module.exports = class Session {
+export default class Session {
     static getAll() {
         try {
             const json = fs.readFileSync('../data/sessions.json', 'utf8');
@@ -59,4 +59,4 @@ module.exports = class Session {
     static generate() {
         return crypto.randomBytes(16).toString('base64');
     }
-}
+};
