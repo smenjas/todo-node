@@ -32,9 +32,15 @@ const server = http.createServer((request, response) => {
             content = createTasksHTML(name);
             break;
         case '/client.js':
+        case '/create-account.js':
             response.statusCode = 200;
             response.setHeader('Content-Type', 'text/javascript');
-            content = fs.readFileSync('../public/js/client.js', 'utf8');
+            content = fs.readFileSync(`../public/js${path}`, 'utf8');
+            break;
+        case '/common.js':
+            response.statusCode = 200;
+            response.setHeader('Content-Type', 'text/javascript');
+            content = fs.readFileSync('common.js', 'utf8');
             break;
         case '/main.css':
             response.statusCode = 200;
@@ -261,7 +267,7 @@ function createTasksHTML(name) {
     return createHTML(title, body, headers);
 }
 
-function createLoginHTML(title = "Log In", action = 'login') {
+function createLoginHTML(title = "Log In", action = 'login', headers = '') {
     const size = 30;
     const body = `<header><h1>${title}</h1></header>
 <form method="post" action="${action}" id="${action}">
@@ -269,9 +275,11 @@ function createLoginHTML(title = "Log In", action = 'login') {
 <input size="${size}" maxlength="64" placeholder="password" type="password" name="password" required><br>
 <button type="submit">${title}</button>
 </form>`;
-    return createHTML(title, body);
+    return createHTML(title, body, headers);
 }
 
 function createAccountHTML() {
-    return createLoginHTML("Create an Account", 'create-account');
+    let headers = HTML.createExternalJS('create-account.js', true);
+    headers += HTML.createExternalJS('common.js', true);
+    return createLoginHTML("Create an Account", 'create-account', headers);
 }

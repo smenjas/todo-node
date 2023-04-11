@@ -20,9 +20,10 @@ ${body}
         return `<link rel="stylesheet" href="${href}">\n`;
     }
 
-    static createExternalJS(src) {
+    static createExternalJS(src, module = false) {
         src = HTML.escape(src);
-        return `<script src="${src}" defer></script>\n`;
+        const moduleAttr = (module) ? ' type="module"' : '';
+        return `<script src="${src}"${moduleAttr} defer></script>\n`;
     }
 
     static createFavicon(href, sizes = null, format = 'png') {
