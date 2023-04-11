@@ -280,6 +280,5 @@ function createLoginHTML(title = "Log In", action = 'login', headers = '') {
 
 function createAccountHTML() {
     let headers = HTML.createExternalJS('create-account.js', true);
-    headers += HTML.createExternalJS('common.js', true);
     return createLoginHTML("Create an Account", 'create-account', headers);
 }
