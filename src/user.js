@@ -107,7 +107,7 @@ module.exports = class User {
     }
 
     static hashPassword(password, salt) {
-        const iterations = 1000;
+        const iterations = 210000;
         const keylen = 64;
         password = password.toString().normalize();
         return crypto.pbkdf2Sync(password, salt, iterations, keylen, 'sha512').toString('hex');
