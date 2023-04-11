@@ -1,6 +1,7 @@
 'use strict';
 
 const htmlTests = require('./tests/html.js');
+const sessionTests = require('./tests/session.js');
 const userTests = require('./tests/user.js');
 
 let totalFailures = 0;
@@ -17,6 +18,7 @@ function runTests(tests) {
 }
 
 runTests(htmlTests);
+runTests(sessionTests);
 runTests(userTests);
 
 if (totalFailures) {

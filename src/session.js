@@ -41,7 +41,7 @@ module.exports = class Session {
         const sessions = Session.getAll();
         let sessionID = '';
         do {
-            sessionID = crypto.randomBytes(16).toString('base64');
+            sessionID = Session.generate();
         } while (sessionID in sessions);
         const now = new Date();
         const expires = now.setMonth(now.getMonth() + 1);
@@ -54,5 +54,9 @@ module.exports = class Session {
             ID: sessionID,
             expires: expires,
         };
+    }
+
+    static generate() {
+        return crypto.randomBytes(16).toString('base64');
     }
 }
