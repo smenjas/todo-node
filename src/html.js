@@ -1,5 +1,3 @@
-'use strict';
-
 export default class HTML {
     static create(title = '', body = '', headers = '', language = 'en') {
         title = HTML.escape(title);

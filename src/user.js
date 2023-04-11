@@ -1,5 +1,3 @@
-'use strict';
-
 import fs from 'fs';
 import crypto from 'crypto';
 import Session from './session.js';

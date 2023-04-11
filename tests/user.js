@@ -1,5 +1,3 @@
-'use strict';
-
 import User from '../src/user.js';
 
 const tests = {};

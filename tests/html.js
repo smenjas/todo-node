@@ -1,5 +1,3 @@
-'use strict';
-
 import HTML from '../src/html.js';
 
 const tests = {};

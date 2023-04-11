@@ -1,5 +1,3 @@
-'use strict';
-
 import Session from '../src/session.js';
 
 const tests = {};
