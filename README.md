@@ -30,9 +30,9 @@ Finally, run the Node server with:
 cd src
 nodemon .
 ```
-`nodemon` is an alternative the `node` command that automatically restarts the
-server when you make changes to the source code, so you don't have to restart
-the server manually.
+`nodemon` is an alternative to the `node` command that automatically restarts
+the server when you make changes to the source code, so you don't have to
+restart the server manually.
 
 favicon by [Twemoji](https://twemoji.twitter.com/), licensed as [CC-BY
 4.0](https://creativecommons.org/licenses/by/4.0/).
