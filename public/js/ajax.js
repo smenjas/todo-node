@@ -40,10 +40,15 @@ export default class AJAX {
         }
     };
 
-    static download(url, callback) {
+    static post(url) {
         AJAX.request = new XMLHttpRequest();
         AJAX.request.onreadystatechange = AJAX.handleHttpResponse;
         AJAX.request.open("POST", url, true);
+        return AJAX.request;
+    }
+
+    static download(url, callback) {
+        AJAX.request = AJAX.post(url);
         AJAX.request.onload = callback;
         AJAX.request.onerror = () => {
             console.error(AJAX.request.statusText);
@@ -52,9 +57,7 @@ export default class AJAX {
     }
 
     static upload(url, data) {
-        AJAX.request = new XMLHttpRequest();
-        AJAX.request.onreadystatechange = AJAX.handleHttpResponse;
-        AJAX.request.open("POST", url, true);
+        AJAX.request = AJAX.post(url);
         AJAX.request.setRequestHeader("Content-Type", "application/json");
         AJAX.request.send(JSON.stringify(data));
     }
