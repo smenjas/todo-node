@@ -34,6 +34,8 @@ button, input {
     border: 1px solid black;
     background: #eee;
     color: black;
+}
+button, input, form span {
     font-size: 1.5rem;
     padding: 0.3rem;
 }

@@ -6,9 +6,13 @@ function validateInput(element, validate) {
         false: '#842e98',
     };
 
+    const span = document.createElement('span');
+    element.insertAdjacentElement('afterend', span);
+
     element.addEventListener('input', event => {
         const valid = validate(element.value);
         element.style.outlineColor = colors[`${valid}`];
+        span.innerHTML = (valid) ? '' : '❌';
     });
 }
 
