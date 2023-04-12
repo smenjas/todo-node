@@ -11,7 +11,7 @@ function addTask(tasks, task) {
 
     task = task.substring(0, Common.taskMax);
     tasks.push(task);
-    uploadTasks(tasks);
+    setTasks(tasks);
     return tasks;
 }
 
@@ -33,7 +33,7 @@ function updateTask(tasks, taskID, task) {
     }
 
     tasks[taskID] = task;
-    uploadTasks(tasks);
+    setTasks(tasks);
     return tasks;
 }
 
@@ -44,7 +44,7 @@ function deleteTask(tasks, taskID) {
     }
 
     tasks.splice(taskID, 1);
-    uploadTasks(tasks);
+    setTasks(tasks);
     return tasks;
 }
 
@@ -104,7 +104,7 @@ function showTasks(tasks) {
     document.getElementById('new-task').focus();
 }
 
-function downloadTasks() {
+function getTasks() {
     AJAX.download(`${Common.server}/download-tasks`, () => {
         if (AJAX.request.readyState !== XMLHttpRequest.DONE) {
             return;
@@ -117,11 +117,11 @@ function downloadTasks() {
     });
 }
 
-function uploadTasks(tasks) {
+function setTasks(tasks) {
     AJAX.upload(`${Common.server}/upload-tasks`, tasks);
 }
 
-downloadTasks();
+getTasks();
 
 const form = document.querySelector('form#tasks');
 form.onsubmit = (event) => {
