@@ -1,21 +1,64 @@
+import AJAX from '/ajax.js';
 import Common from '/common.js';
 
-function validateInput(element, validate) {
+function createAccount(data) {
+    const callback = () => {
+        if (AJAX.request.readyState !== XMLHttpRequest.DONE) {
+            return;
+        }
+        if (AJAX.request.status !== 201 && AJAX.request.status !== 409) {
+            return;
+        }
+
+        const result = JSON.parse(AJAX.request.responseText);
+        console.log(result);
+
+        if (result.success) {
+            window.location.href = '/';
+        }
+
+        signalValidity(nameInput, nameSpan, result.success);
+
+        const p = document.createElement('p');
+        p.innerHTML = result.errors.name;
+        form.append(p);
+    };
+    const url = `${Common.server}/create-account`;
+    AJAX.processForm(url, data, callback);
+}
+
+function signalValidity(input, indicator, valid) {
     const colors = {
         true: '#a6edb2',
         false: '#842e98',
     };
-
-    const span = document.createElement('span');
-    element.insertAdjacentElement('afterend', span);
-
-    element.addEventListener('input', event => {
-        const valid = validate(element.value);
-        element.form.querySelector('[type=submit]').disabled = !valid;
-        element.style.outlineColor = colors[`${valid}`];
-        span.innerHTML = (valid) ? '' : '❌';
-    });
+    input.form.querySelector('[type=submit]').disabled = !valid;
+    input.style.outlineColor = colors[`${valid}`];
+    indicator.innerHTML = (valid) ? '' : '❌';
 }
 
-validateInput(document.querySelector('[name=name]'), Common.validateName);
-validateInput(document.querySelector('[name=password]'), Common.validatePassword);
+function validateInput(input, validate) {
+    const span = document.createElement('span');
+    input.insertAdjacentElement('afterend', span);
+    input.addEventListener('input', event => {
+        const valid = validate(input.value);
+        signalValidity(input, span, valid);
+    });
+    return span;
+}
+
+const nameInput = document.querySelector('[name=name]');
+const passwordInput = document.querySelector('[name=password]');
+
+const nameSpan = validateInput(nameInput, Common.validateName);
+const passwordSpan = validateInput(passwordInput, Common.validatePassword);
+
+const form = document.querySelector('form#create-account');
+form.onsubmit = (event) => {
+    event.preventDefault();
+    const data = {
+        name: event.target.elements.name.value,
+        password: event.target.elements.password.value,
+    };
+    createAccount(data);
+};

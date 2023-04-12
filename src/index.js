@@ -47,11 +47,9 @@ const server = http.createServer((request, response) => {
             content = fs.readFileSync('../public/css/main.css', 'utf8');
             break;
         case '/download-tasks':
-            response.setHeader('Cache-Control', 'no-cache');
             downloadTasks(request, response, name);
             return;
         case '/upload-tasks':
-            response.setHeader('Cache-Control', 'no-cache');
             uploadTasks(request, response, name);
             return;
         case '/create-account':
@@ -129,6 +127,7 @@ function handlePostRequest(request, response, callback) {
 
 function downloadTasks(request, response, name) {
     handlePostRequest(request, response, (error, body) => {
+        response.setHeader('Cache-Control', 'no-cache');
         if (error) {
             console.error(error.message);
             response.statusCode = error.statusCode;
@@ -144,6 +143,7 @@ function downloadTasks(request, response, name) {
 
 function uploadTasks(request, response, name) {
     handlePostRequest(request, response, (error, body) => {
+        response.setHeader('Cache-Control', 'no-cache');
         if (error) {
             console.error(error.message);
             response.statusCode = error.statusCode;
@@ -170,23 +170,25 @@ function setSessionCookie(response, session) {
 
 function createAccount(request, response) {
     handlePostRequest(request, response, (error, body) => {
+        response.setHeader('Cache-Control', 'no-cache');
         if (error) {
             console.error(error.message);
             response.statusCode = error.statusCode;
             response.end(error.message);
             return;
         }
-        const data = querystring.parse(body);
+        const data = JSON.parse(body);
         const user = { name: data.name }
         const result = User.create(user, data.password);
         if (result.success) {
             const session = User.logIn(data.name, data.password);
             setSessionCookie(response, session);
+            response.statusCode = 201; // HTTP 201: Created
+        } else {
+            response.statusCode = 409; // HTTP 409: Conflict
         }
-        const location = (result.success) ? '/' : request.headers.referer;
-        response.statusCode = 302;
-        response.setHeader('Location', location);
-        response.end();
+        response.setHeader('Content-Type', 'application/json');
+        response.end(JSON.stringify(result));
     });
 }
 

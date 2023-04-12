@@ -47,6 +47,16 @@ export default class AJAX {
         return AJAX.request;
     }
 
+    static processForm(url, data, callback) {
+        AJAX.request = AJAX.post(url);
+        AJAX.request.onload = callback;
+        AJAX.request.onerror = () => {
+            console.error(AJAX.request.statusText);
+        };
+        AJAX.request.setRequestHeader("Content-Type", "application/json");
+        AJAX.request.send(JSON.stringify(data));
+    }
+
     static download(url, callback) {
         AJAX.request = AJAX.post(url);
         AJAX.request.onload = callback;
