@@ -11,6 +11,7 @@ function validateInput(element, validate) {
 
     element.addEventListener('input', event => {
         const valid = validate(element.value);
+        element.form.querySelector('[type=submit]').disabled = !valid;
         element.style.outlineColor = colors[`${valid}`];
         span.innerHTML = (valid) ? '' : '❌';
     });
