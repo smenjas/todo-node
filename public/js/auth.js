@@ -1,15 +1,21 @@
 import Common from '/common.js';
 
-const nameInput = document.querySelector('[name=name]');
-nameInput.addEventListener('input', event => {
-    const valid = Common.validateName(event.target.value);
-    console.log(event.target.value, valid);
-    event.target.style.outlineColor = (valid) ? 'green' : 'red';
-});
+function validateInput(element, validate) {
+    const colors = {
+        true: '#a6edb2',
+        false: '#842e98',
+    };
 
-const passwordInput = document.querySelector('[name=password]');
-passwordInput.addEventListener('input', event => {
-    const valid = Common.validatePassword(event.target.value);
-    console.log(event.target.value, valid);
-    event.target.style.outlineColor = (valid) ? 'green' : 'red';
-});
+    const span = document.createElement('span');
+    element.insertAdjacentElement('afterend', span);
+
+    element.addEventListener('input', event => {
+        const valid = validate(element.value);
+        element.form.querySelector('[type=submit]').disabled = !valid;
+        element.style.outlineColor = colors[`${valid}`];
+        span.innerHTML = (valid) ? '' : '❌';
+    });
+}
+
+validateInput(document.querySelector('[name=name]'), Common.validateName);
+validateInput(document.querySelector('[name=password]'), Common.validatePassword);

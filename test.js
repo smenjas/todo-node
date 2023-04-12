@@ -9,7 +9,7 @@ function runTests(tests) {
     for (const [name, test] of Object.entries(tests)) {
         const failures = test();
         totalFailures += failures.length;
-        console.log(failures.length ? "\x1b[31mFAIL\x1b[0m" : "\x1b[32mPASS\x1b[0m", name);
+        console.log(failures.length ? "\x1b[41mFAIL\x1b[0m" : "\x1b[32mPASS\x1b[0m", name);
         for (const failure of failures) {
             console.log(`\t${failure}`);
         }
