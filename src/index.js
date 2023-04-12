@@ -29,6 +29,7 @@ const server = http.createServer((request, response) => {
             response.setHeader('Content-Type', 'text/html');
             content = createTasksHTML(name);
             break;
+        case '/ajax.js':
         case '/auth.js':
         case '/client.js':
             response.statusCode = 200;

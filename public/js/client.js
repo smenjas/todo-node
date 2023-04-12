@@ -1,6 +1,6 @@
+import AJAX from '/ajax.js';
 import Common from '/common.js';
 
-let httpRequest;
 let tasks;
 
 function addTask(tasks, task) {
@@ -104,71 +104,21 @@ function showTasks(tasks) {
     document.getElementById('new-task').focus();
 }
 
-function describeHttpRequestState(readyState) {
-    switch (readyState) {
-        case XMLHttpRequest.UNSENT:
-            return "AJAX connection has not been opened yet.";
-        case XMLHttpRequest.OPENED:
-            return "AJAX request opened and in progress.";
-        case XMLHttpRequest.HEADERS_RECEIVED:
-            return "AJAX request sent, headers and status are available.";
-        case XMLHttpRequest.LOADING:
-            return "AJAX request in progress.";
-        case XMLHttpRequest.DONE:
-            return "AJAX request complete.";
-        default:
-            return "ERROR: AJAX state not recognized.";
-    }
-}
-
-function handleHttpResponse() {
-    try {
-        if ((httpRequest.status === 0 && httpRequest.readyState === XMLHttpRequest.OPENED) ||
-            (httpRequest.status === 200 && httpRequest.readyState !== XMLHttpRequest.DONE)) {
-            // No need to spam the console for nominal requests in progress.
-            return;
-        }
-        const requestStatus = describeHttpRequestState(httpRequest.readyState);
-        const responseText = (httpRequest.responseText.length > 128) ?
-            httpRequest.responseText.substring(0, 128) + "...":
-            httpRequest.responseText;
-        let logMessage = `${requestStatus} ${responseText}`;
-        if (httpRequest.status !== 0) {
-            logMessage = `HTTP ${httpRequest.status} ${httpRequest.statusText}, ${logMessage}`;
-        }
-        console.log(logMessage);
-    }
-    catch (e) {
-        console.log("Caught Exception:", e.description);
-    }
-};
-
 function downloadTasks() {
-    httpRequest = new XMLHttpRequest();
-    httpRequest.onreadystatechange = handleHttpResponse;
-    httpRequest.open("POST", `${Common.server}/download-tasks`, true);
-    httpRequest.onload = () => {
-        if (httpRequest.readyState !== XMLHttpRequest.DONE) {
+    AJAX.download(`${Common.server}/download-tasks`, () => {
+        if (AJAX.request.readyState !== XMLHttpRequest.DONE) {
             return;
         }
-        if (httpRequest.status !== 200) {
+        if (AJAX.request.status !== 200) {
             return;
         }
-        tasks = JSON.parse(httpRequest.responseText);
+        tasks = JSON.parse(AJAX.request.responseText);
         showTasks(tasks);
-    };
-    httpRequest.onerror = () => {
-        console.error(httpRequest.statusText);
-    }
-    httpRequest.send();
+    });
 }
 
 function uploadTasks(tasks) {
-    httpRequest = new XMLHttpRequest();
-    httpRequest.onreadystatechange = handleHttpResponse;
-    httpRequest.open("POST", `${Common.server}/upload-tasks`, true);
-    httpRequest.setRequestHeader("Content-Type", "application/json");
-    httpRequest.send(JSON.stringify(tasks));
+    AJAX.upload(`${Common.server}/upload-tasks`, tasks);
 }
 
 downloadTasks();
