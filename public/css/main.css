@@ -35,7 +35,7 @@ button, input {
     background: #eee;
     color: black;
 }
-button, input, form span {
+button, input, form p, form span {
     font-size: 1.5rem;
     padding: 0.3rem;
 }
