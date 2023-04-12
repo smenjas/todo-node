@@ -1,7 +1,7 @@
 import AJAX from '/ajax.js';
 import Common from '/common.js';
 
-let tasks;
+const maxLength = Common.taskMax;
 
 function addTask(tasks, task) {
     task = task.trim();
@@ -9,7 +9,7 @@ function addTask(tasks, task) {
         return tasks;
     }
 
-    task = task.substring(0, Common.taskMax);
+    task = task.substring(0, maxLength);
     tasks.push(task);
     setTasks(tasks);
     return tasks;
@@ -22,7 +22,7 @@ function updateTask(tasks, taskID, task) {
     }
 
     task = task.trim();
-    task = task.substring(0, Common.taskMax);
+    task = task.substring(0, maxLength);
     if (task === tasks[taskID]) {
         return tasks;
     }
@@ -52,8 +52,8 @@ function createInput(name, value = "") {
     const input = document.createElement('input');
     input.setAttribute('name', name);
     input.setAttribute('id', name);
-    input.setAttribute('size', Common.taskMax);
-    input.setAttribute('maxlength', Common.taskMax);
+    input.setAttribute('size', maxLength);
+    input.setAttribute('maxlength', maxLength);
     input.setAttribute('value', value);
     return input;
 }
@@ -121,6 +121,7 @@ function setTasks(tasks) {
     AJAX.upload(`${Common.server}/upload-tasks`, tasks);
 }
 
+let tasks;
 getTasks();
 
 const form = document.querySelector('form#tasks');
@@ -136,4 +137,4 @@ form.onsubmit = (event) => {
         }
         showTasks(tasks);
     });
-}
+};
