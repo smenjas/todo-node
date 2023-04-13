@@ -1,6 +1,45 @@
 import AJAX from '/ajax.js';
 import Common from '/common.js';
 
+function calculateEntropy(string) {
+    if (!string.length) {
+        return 0;
+    }
+    let combos = 0;
+    if (/[a-z]/.test(string)) {
+        combos += 26;
+    }
+    if (/[A-Z]/.test(string)) {
+        combos += 26;
+    }
+    if (/[0-9]/.test(string)) {
+        combos += 10;
+    }
+    if (/[^0-9a-zA-Z]/.test(string)) {
+        combos += 33;
+    }
+    const entropy = string.length * Math.log(combos) / Math.LN2;
+    return Math.round(entropy);
+}
+
+function checkPassword(input) {
+    const p = document.createElement('p');
+    input.form.append(p);
+    input.addEventListener('input', event => {
+        const entropy = calculateEntropy(input.value);
+        p.innerHTML = createPasswordMeter(entropy);
+    });
+}
+
+function createPasswordMeter(entropy) {
+    const min = 0; // Empty
+    const low = 104; // 16 bytes, using all character classes, minus one
+    const high = 210; // 24 bytes, using all character classes
+    const max = 420; // 64 bytes, using all character classes
+    let strength = (entropy >= high) ? "High" : (entropy > low) ? "Medium" : "Low";
+    return `<meter min="${min}" max="${max}" low="${low}" high="${high}" optimum="${max}" value="${entropy}">Password strength: ${strength}</meter>`;
+}
+
 function createAccount(data) {
     const callback = () => {
         if (AJAX.request.readyState !== XMLHttpRequest.DONE) {
@@ -11,7 +50,6 @@ function createAccount(data) {
         }
 
         const result = JSON.parse(AJAX.request.responseText);
-        console.log(result);
 
         if (result.success) {
             window.location.href = '/';
@@ -47,18 +85,21 @@ function validateInput(input, validate) {
     return span;
 }
 
-const nameInput = document.querySelector('[name=name]');
-const passwordInput = document.querySelector('[name=password]');
-
-const nameSpan = validateInput(nameInput, Common.validateName);
-const passwordSpan = validateInput(passwordInput, Common.validatePassword);
-
 const form = document.querySelector('form#create-account');
-form.onsubmit = (event) => {
-    event.preventDefault();
-    const data = {
-        name: event.target.elements.name.value,
-        password: event.target.elements.password.value,
+if (form) {
+    const nameInput = document.querySelector('[name=name]');
+    const passwordInput = document.querySelector('[name=password]');
+
+    const nameSpan = validateInput(nameInput, Common.validateName);
+    validateInput(passwordInput, Common.validatePassword);
+    checkPassword(passwordInput);
+
+    form.onsubmit = (event) => {
+        event.preventDefault();
+        const data = {
+            name: event.target.elements.name.value,
+            password: event.target.elements.password.value,
+        };
+        createAccount(data);
     };
-    createAccount(data);
-};
+}

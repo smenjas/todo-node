@@ -49,7 +49,7 @@ export default class User {
         const hash = User.hashPassword(password, user.salt);
 
         if (hash !== user.hash) {
-            console.log(`Incorrect password, log in failed.`);
+            console.log(`Incorrect password for ${name}, log in failed.`);
             return {};
         }
 
