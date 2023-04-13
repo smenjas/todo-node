@@ -46,14 +46,14 @@ function validateInput(input, validate) {
     return span;
 }
 
-const nameInput = document.querySelector('[name=name]');
-const passwordInput = document.querySelector('[name=password]');
-
-const nameSpan = validateInput(nameInput, Common.validateName);
-validateInput(passwordInput, Common.validatePassword);
-
 const form = document.querySelector('form#create-account');
 if (form) {
+    const nameInput = document.querySelector('[name=name]');
+    const passwordInput = document.querySelector('[name=password]');
+
+    const nameSpan = validateInput(nameInput, Common.validateName);
+    validateInput(passwordInput, Common.validatePassword);
+
     form.onsubmit = (event) => {
         event.preventDefault();
         const data = {
