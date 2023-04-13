@@ -4,29 +4,6 @@ const tests = {};
 
 tests["Username requirements are enforced."] = () => {
     let failures = [];
-
-    // Get the printable, non-word ASCII decimals.
-    const decimals = [];
-    for (let d = 32; d <= 47; d++) {
-        decimals.push(d);
-    }
-    for (let d = 58; d <= 64; d++) {
-        decimals.push(d);
-    }
-    for (let d = 91; d <= 94; d++) {
-        decimals.push(d);
-    }
-    decimals.push(96);
-    for (let d = 123; d <= 126; d++) {
-        decimals.push(d);
-    }
-
-    // Get the printable, non-word ASCII characters.
-    const chars = [];
-    for (const decimal of decimals) {
-        chars.push(String.fromCodePoint(decimal));
-    }
-
     const names = {
         '': false,
         '1': true,
@@ -40,6 +17,8 @@ tests["Username requirements are enforced."] = () => {
         'Username_is_max': true,
         'Username_is_long': false,
     };
+    // Printable, non-word ASCII characters
+    const chars = ' !"#$%&\'()*+,-./:;<=>?@[\]^`{|}~'
     for (const char of chars) {
         const name = `alice${char}`;
         names[name] = false;
