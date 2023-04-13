@@ -9,15 +9,22 @@ export default class Common {
     static passMax = 64;
     static taskMax = 70;
 
-    static calculateEntropy(string) {
+    static calculateEntropy(string, hex = false) {
         if (!string.length) {
             return 0;
         }
         let combos = 0;
         combos += /[0-9]/.test(string) ? 10 : 0;
-        combos += /[a-z]/.test(string) ? 26 : 0;
-        combos += /[A-Z]/.test(string) ? 26 : 0;
-        combos += /[^0-9a-zA-Z]/.test(string) ? 33 : 0;
+        if (hex) {
+            combos += /[a-f]/i.test(string) ? 6 : 0;
+            if (/[^0-9a-f]/i.test(string)) {
+                console.error("Not hexadecimal:", string);
+            }
+        } else {
+            combos += /[a-z]/.test(string) ? 26 : 0;
+            combos += /[A-Z]/.test(string) ? 26 : 0;
+            combos += /[^0-9a-zA-Z]/.test(string) ? 33 : 0;
+        }
         const entropy = string.length * Math.log(combos) / Math.LN2;
         return Math.round(entropy);
     }

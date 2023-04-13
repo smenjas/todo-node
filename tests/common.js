@@ -58,14 +58,26 @@ tests["Entropy calculations make sense."] = () => {
     let failures = [];
     const strings = {
         '': 0,
-        '1234567890123aA_': 105,
-        '12345678901234567890123456789aA_': 210,
-        '1234567890123456789012345678901234567890123456789012345678901aA_': 420,
+        '1234567890123xX_': 105,
+        '12345678901234567890123456789xX_': 210,
+        '1234567890123456789012345678901234567890123456789012345678901xX_': 420,
     };
     for (const string in strings) {
         const result = Common.calculateEntropy(string);
         if (result !== strings[string]) {
             failures.push(`${result} not ${strings[string]} for: ${string}`);
+        }
+    }
+    const hexes = {
+        '': 0,
+        '123456789012345A': 64,
+        '1234567890123456789012345678901A': 128,
+        '123456789012345678901234567890123456789012345678901234567890123A': 256,
+    };
+    for (const hex in hexes) {
+        const result = Common.calculateEntropy(hex, true);
+        if (result !== hexes[hex]) {
+            failures.push(`${result} not ${hexes[hex]} for: ${hex}`);
         }
     }
     return failures;
