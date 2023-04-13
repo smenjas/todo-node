@@ -11,7 +11,6 @@ function createAccount(data) {
         }
 
         const result = JSON.parse(AJAX.request.responseText);
-        console.log(result);
 
         if (result.success) {
             window.location.href = '/';
@@ -51,14 +50,16 @@ const nameInput = document.querySelector('[name=name]');
 const passwordInput = document.querySelector('[name=password]');
 
 const nameSpan = validateInput(nameInput, Common.validateName);
-const passwordSpan = validateInput(passwordInput, Common.validatePassword);
+validateInput(passwordInput, Common.validatePassword);
 
 const form = document.querySelector('form#create-account');
-form.onsubmit = (event) => {
-    event.preventDefault();
-    const data = {
-        name: event.target.elements.name.value,
-        password: event.target.elements.password.value,
+if (form) {
+    form.onsubmit = (event) => {
+        event.preventDefault();
+        const data = {
+            name: event.target.elements.name.value,
+            password: event.target.elements.password.value,
+        };
+        createAccount(data);
     };
-    createAccount(data);
-};
+}
