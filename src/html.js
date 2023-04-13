@@ -23,7 +23,7 @@ ${body}
     static createExternalJS(src, module = false) {
         src = HTML.escape(src);
         const moduleAttr = (module) ? ' type="module"' : '';
-        return `<script src="${src}"${moduleAttr} defer></script>\n`;
+        return `<script src="${src}"${moduleAttr} defer></script>`;
     }
 
     static createFavicon(href, sizes = null, format = 'png') {

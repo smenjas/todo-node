@@ -34,6 +34,26 @@ tests["CSS links get created correctly."] = () => {
     return failures;
 };
 
+tests["Script tags get created correctly."] = () => {
+    let failures = [];
+    const scripts = {
+        '<script src="index.js" defer></script>': {
+            src: 'index.js',
+        },
+        '<script src="client.js" type="module" defer></script>': {
+            src: 'client.js',
+            module: true,
+        },
+    };
+    for (const [expected, script] of Object.entries(scripts)) {
+        const result = HTML.createExternalJS(script.src, script.module);
+        if (result !== expected) {
+            failures.push(`${JSON.stringify(script)} became: ${result}`);
+        }
+    }
+    return failures;
+};
+
 tests["Favicons get created correctly."] = () => {
     let failures = [];
     const favicons = {
