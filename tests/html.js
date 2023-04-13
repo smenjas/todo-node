@@ -2,6 +2,36 @@ import HTML from '../src/html.js';
 
 const tests = {};
 
+tests["HTML gets created correctly."] = () => {
+    let failures = [];
+    const pages = {};
+    const html = `<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>R&amp;D</title>
+<meta name="author" content="Anonymous">
+</head>
+<body>
+<h1>R&amp;D</h1>
+</body>
+</html>`;
+    pages[html] = {
+        title: 'R&D',
+        body: '<h1>R&amp;D</h1>',
+        headers: '<meta name="author" content="Anonymous">',
+        language: 'en-us',
+    };
+    for (const [expected, page] of Object.entries(pages)) {
+        const result = HTML.create(page.title, page.body, page.headers, page.language);
+        if (result !== expected) {
+            failures.push(`${JSON.stringify(page)} became: ${result}`);
+        }
+    }
+    return failures;
+};
+
 tests["HTML special characters get escaped."] = () => {
     let failures = [];
     const chars = {
