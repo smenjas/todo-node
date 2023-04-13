@@ -14,18 +14,10 @@ export default class Common {
             return 0;
         }
         let combos = 0;
-        if (/[a-z]/.test(string)) {
-            combos += 26;
-        }
-        if (/[A-Z]/.test(string)) {
-            combos += 26;
-        }
-        if (/[0-9]/.test(string)) {
-            combos += 10;
-        }
-        if (/[^0-9a-zA-Z]/.test(string)) {
-            combos += 33;
-        }
+        combos += /[0-9]/.test(string) ? 10 : 0;
+        combos += /[a-z]/.test(string) ? 26 : 0;
+        combos += /[A-Z]/.test(string) ? 26 : 0;
+        combos += /[^0-9a-zA-Z]/.test(string) ? 33 : 0;
         const entropy = string.length * Math.log(combos) / Math.LN2;
         return Math.round(entropy);
     }
