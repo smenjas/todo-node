@@ -20,6 +20,20 @@ tests["HTML special characters get escaped."] = () => {
     return failures;
 };
 
+tests["CSS links get created correctly."] = () => {
+    let failures = [];
+    const stylesheets = {
+        '<link rel="stylesheet" href="style.css">': 'style.css',
+    };
+    for (const [expected, href] of Object.entries(stylesheets)) {
+        const result = HTML.createExternalCSS(href);
+        if (result !== expected) {
+            failures.push(`${href} became: ${result} not ${expected}`);
+        }
+    }
+    return failures;
+};
+
 tests["Favicons get created correctly."] = () => {
     let failures = [];
     const favicons = {

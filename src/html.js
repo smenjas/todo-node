@@ -17,7 +17,7 @@ ${body}
 
     static createExternalCSS(href) {
         href = HTML.escape(href);
-        return `<link rel="stylesheet" href="${href}">\n`;
+        return `<link rel="stylesheet" href="${href}">`;
     }
 
     static createExternalJS(src, module = false) {
