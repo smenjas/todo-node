@@ -40,6 +40,11 @@ button, input, form p, form span {
     padding: 0.3rem;
 }
 
+form#create-account input,
+form#login input {
+    max-width: calc(100vw - 4rem);
+}
+
 button#add-task {
     font-size: 2.0rem;
     font-weight: bold;
