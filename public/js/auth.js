@@ -1,32 +1,11 @@
 import AJAX from '/ajax.js';
 import Common from '/common.js';
 
-function calculateEntropy(string) {
-    if (!string.length) {
-        return 0;
-    }
-    let combos = 0;
-    if (/[a-z]/.test(string)) {
-        combos += 26;
-    }
-    if (/[A-Z]/.test(string)) {
-        combos += 26;
-    }
-    if (/[0-9]/.test(string)) {
-        combos += 10;
-    }
-    if (/[^0-9a-zA-Z]/.test(string)) {
-        combos += 33;
-    }
-    const entropy = string.length * Math.log(combos) / Math.LN2;
-    return Math.round(entropy);
-}
-
 function checkPassword(input) {
     const p = document.createElement('p');
     input.form.append(p);
     input.addEventListener('input', event => {
-        const entropy = calculateEntropy(input.value);
+        const entropy = Common.calculateEntropy(input.value);
         p.innerHTML = createPasswordMeter(entropy);
     });
 }
@@ -34,7 +13,7 @@ function checkPassword(input) {
 function createPasswordMeter(entropy) {
     const min = 0; // Empty
     const low = 104; // 16 bytes, using all character classes, minus one
-    const high = 210; // 24 bytes, using all character classes
+    const high = 210; // 32 bytes, using all character classes
     const max = 420; // 64 bytes, using all character classes
     let strength = (entropy >= high) ? "High" : (entropy > low) ? "Medium" : "Low";
     return `<meter min="${min}" max="${max}" low="${low}" high="${high}" optimum="${max}" value="${entropy}">Password strength: ${strength}</meter>`;

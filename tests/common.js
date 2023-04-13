@@ -75,4 +75,21 @@ tests["Password requirements are enforced."] = () => {
     return failures;
 };
 
+tests["Entropy calculations make sense."] = () => {
+    let failures = [];
+    const strings = {
+        '': 0,
+        '1234567890123aA_': 105,
+        '12345678901234567890123456789aA_': 210,
+        '1234567890123456789012345678901234567890123456789012345678901aA_': 420,
+    };
+    for (const string in strings) {
+        const result = Common.calculateEntropy(string);
+        if (result !== strings[string]) {
+            failures.push(`${result} not ${strings[string]} for: ${string}`);
+        }
+    }
+    return failures;
+};
+
 export default tests;
