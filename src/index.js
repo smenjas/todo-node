@@ -226,7 +226,7 @@ function createHTML(title, body, headers = '') {
     headers = HTML.createExternalCSS('main.css') + headers;
     headers += HTML.createFavicon(`/apple-touch-icon.png`, `180x180`);
     headers += HTML.createFavicon(`/favicon.ico`, `48x48`, 'vnd');
-    for (const size of [16, 32, 180, 192, 512]) {
+    for (const size of [16, 32, 192, 512]) {
         headers += HTML.createFavicon(`/favicon-${size}.png`, `${size}x${size}`);
     }
     return HTML.create(title, body, headers, 'en-us');
