@@ -14,7 +14,7 @@ export default class Session {
         return {};
     }
 
-    static setAll(sessions) {
+    static set all(sessions) {
         fs.writeFile('../data/sessions.json', JSON.stringify(sessions), error => {
             if (error) {
                 console.error(error);
@@ -32,7 +32,7 @@ export default class Session {
             return;
         }
         delete sessions[sessionID];
-        Session.setAll(sessions);
+        Session.all = sessions;
     }
 
     static create(name) {
@@ -47,7 +47,7 @@ export default class Session {
             name: name,
             expires: expires,
         };
-        Session.setAll(sessions);
+        Session.all = sessions;
         return {
             ID: sessionID,
             expires: expires,
