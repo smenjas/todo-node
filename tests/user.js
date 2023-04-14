@@ -24,10 +24,22 @@ tests["Salt meets requirements."] = () => {
 
 tests["Hash meets requirements."] = () => {
     let failures = [];
-    const salt = User.createSalt();
-    const hash = User.hashPassword('12345', salt);
-    if (hash.length !== 128) {
-        failures.push(`Hash length is: ${hash.length}`);
+    let count = 0;
+    const password = '12345';
+    const hashes = {};
+    while (count++ < 3) {
+        const salt = User.createSalt();
+        const hash = User.hashPassword('12345', salt);
+        const entropy = Common.calculateEntropy(hash, true);
+        if (entropy < 512) { // 128 hexadecimal digits
+            failures.push(`Hash length is: ${hash.length}`);
+            failures.push(`Hash ${hash} entropy is: ${entropy}`);
+        }
+        if (hash in hashes) {
+            failures.push(`Salt ${hash} appeared again!`);
+        } else {
+            hashes[hash] = entropy;
+        }
     }
     return failures;
 };
