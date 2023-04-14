@@ -32,7 +32,7 @@ export default class User {
         console.log(user);
 
         users[user.name] = user;
-        User.setUsers(users);
+        User.all = users;
 
         return { success: true };
     }
@@ -91,7 +91,7 @@ export default class User {
         return {};
     }
 
-    static setUsers(users) {
+    static set all(users) {
         try {
             fs.writeFileSync('../data/users.json', JSON.stringify(users));
         }
