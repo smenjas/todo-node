@@ -223,7 +223,7 @@ function logOut(request, response) {
 }
 
 function createHTML(title, body, headers = '') {
-    headers = HTML.createExternalCSS('main.css') + headers;
+    headers = HTML.createExternalCSS('/main.css') + headers;
     headers += HTML.createFavicon(`/apple-touch-icon.png`, `180x180`);
     headers += HTML.createFavicon(`/favicon.ico`, `48x48`, 'vnd');
     for (const size of [16, 32, 192, 512]) {
@@ -235,7 +235,7 @@ function createHTML(title, body, headers = '') {
 function create404HTML() {
     const title = "HTTP 404: Page Not Found";
     const body = `<header><h1>${title}</h1></header>
-<img src="404.jpg" alt="John Travolta as Vincent Vega in the movie Pulp Fiction expresses confusion.">`;
+<img src="/404.jpg" alt="John Travolta as Vincent Vega in the movie Pulp Fiction expresses confusion.">`;
     return createHTML(title, body);
 }
 
@@ -269,12 +269,12 @@ function createTasksHTML(name) {
 function createLoginHTML(title = "Log In", action = 'login') {
     const size = 30;
     const body = `<header><h1>${title}</h1></header>
-<form method="post" action="${action}" id="${action}">
+<form method="post" action="/${action}" id="${action}">
 <input size="${size}" maxlength="${Common.nameMax}" placeholder="username" type="text" name="name" required><br>
 <input size="${size}" maxlength="${Common.passMax}" placeholder="password" type="password" name="password" required><br>
 <button type="submit">${title}</button>
 </form>`;
-    const headers = HTML.createExternalJS('auth.js', true);
+    const headers = HTML.createExternalJS('/auth.js', true);
     return createHTML(title, body, headers);
 }
 
