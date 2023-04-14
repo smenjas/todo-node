@@ -2,7 +2,7 @@ import fs from 'fs';
 import crypto from 'crypto';
 
 export default class Session {
-    static getAll() {
+    static get all() {
         try {
             const json = fs.readFileSync('../data/sessions.json', 'utf8');
             return JSON.parse(json);
@@ -26,7 +26,7 @@ export default class Session {
         if (sessionID === undefined) {
             return;
         }
-        const sessions = Session.getAll();
+        const sessions = Session.all;
         if (!(sessionID in sessions)) {
             console.log("sessionID not found:", sessionID);
             return;
@@ -36,7 +36,7 @@ export default class Session {
     }
 
     static create(name) {
-        const sessions = Session.getAll();
+        const sessions = Session.all;
         let sessionID = '';
         do {
             sessionID = Session.generate();

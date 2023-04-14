@@ -66,7 +66,7 @@ export default class User {
         if (!sessionID) {
             return;
         }
-        const sessions = Session.getAll();
+        const sessions = Session.all;
         if (!(sessionID in sessions)) {
             return;
         }
