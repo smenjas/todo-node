@@ -36,7 +36,7 @@ tests["Hash meets requirements."] = () => {
             failures.push(`Hash ${hash} entropy is: ${entropy}`);
         }
         if (hash in hashes) {
-            failures.push(`Salt ${hash} appeared again!`);
+            failures.push(`Hash ${hash} appeared again!`);
         } else {
             hashes[hash] = entropy;
         }

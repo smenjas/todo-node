@@ -15,7 +15,7 @@ tests["Session ID meets requirements."] = () => {
             failures.push(`Session ID ${sessionID} entropy is: ${entropy}`);
         }
         if (sessionID in sessionIDs) {
-            failures.push(`Salt ${sessionID} appeared again!`);
+            failures.push(`Session ID ${sessionID} appeared again!`);
         } else {
             sessionIDs[sessionID] = entropy;
         }
