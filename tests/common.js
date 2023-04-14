@@ -4,29 +4,6 @@ const tests = {};
 
 tests["Username requirements are enforced."] = () => {
     let failures = [];
-
-    // Get the printable, non-word ASCII decimals.
-    const decimals = [];
-    for (let d = 32; d <= 47; d++) {
-        decimals.push(d);
-    }
-    for (let d = 58; d <= 64; d++) {
-        decimals.push(d);
-    }
-    for (let d = 91; d <= 94; d++) {
-        decimals.push(d);
-    }
-    decimals.push(96);
-    for (let d = 123; d <= 126; d++) {
-        decimals.push(d);
-    }
-
-    // Get the printable, non-word ASCII characters.
-    const chars = [];
-    for (const decimal of decimals) {
-        chars.push(String.fromCodePoint(decimal));
-    }
-
     const names = {
         '': false,
         '1': true,
@@ -40,6 +17,8 @@ tests["Username requirements are enforced."] = () => {
         'Username_is_max': true,
         'Username_is_long': false,
     };
+    // Printable, non-word ASCII characters
+    const chars = ' !"#$%&\'()*+,-./:;<=>?@[\]^`{|}~'
     for (const char of chars) {
         const name = `alice${char}`;
         names[name] = false;
@@ -79,14 +58,26 @@ tests["Entropy calculations make sense."] = () => {
     let failures = [];
     const strings = {
         '': 0,
-        '1234567890123aA_': 105,
-        '12345678901234567890123456789aA_': 210,
-        '1234567890123456789012345678901234567890123456789012345678901aA_': 420,
+        '1234567890123xX_': 105,
+        '12345678901234567890123456789xX_': 210,
+        '1234567890123456789012345678901234567890123456789012345678901xX_': 420,
     };
     for (const string in strings) {
         const result = Common.calculateEntropy(string);
         if (result !== strings[string]) {
             failures.push(`${result} not ${strings[string]} for: ${string}`);
+        }
+    }
+    const hexes = {
+        '': 0,
+        '123456789012345A': 64,
+        '1234567890123456789012345678901A': 128,
+        '123456789012345678901234567890123456789012345678901234567890123A': 256,
+    };
+    for (const hex in hexes) {
+        const result = Common.calculateEntropy(hex, true);
+        if (result !== hexes[hex]) {
+            failures.push(`${result} not ${hexes[hex]} for: ${hex}`);
         }
     }
     return failures;
