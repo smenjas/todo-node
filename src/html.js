@@ -17,20 +17,20 @@ ${body}
 
     static createExternalCSS(href) {
         href = HTML.escape(href);
-        return `<link rel="stylesheet" href="${href}">`;
+        return `<link rel="stylesheet" href="${href}">\n`;
     }
 
     static createExternalJS(src, module = false) {
         src = HTML.escape(src);
         const moduleAttr = (module) ? ' type="module"' : '';
-        return `<script src="${src}"${moduleAttr} defer></script>`;
+        return `<script src="${src}"${moduleAttr} defer></script>\n`;
     }
 
     static createFavicon(href, sizes = null, format = 'png') {
         href = HTML.escape(href);
         const sizesAttr = (sizes) ? ` sizes="${sizes}"` : '';
         const rel = (href.includes('apple-touch-icon')) ? 'apple-touch-icon' : 'icon';
-        return `<link rel="${rel}" type="image/${format}" href="${href}"${sizesAttr}>`;
+        return `<link rel="${rel}" type="image/${format}" href="${href}"${sizesAttr}>\n`;
     }
 
     static escape(str) {

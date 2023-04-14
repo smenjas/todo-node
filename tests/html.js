@@ -53,12 +53,12 @@ tests["HTML special characters get escaped."] = () => {
 tests["CSS links get created correctly."] = () => {
     let failures = [];
     const stylesheets = {
-        '<link rel="stylesheet" href="style.css">': 'style.css',
+        '<link rel="stylesheet" href="style.css">\n': 'style.css',
     };
     for (const [expected, href] of Object.entries(stylesheets)) {
         const result = HTML.createExternalCSS(href);
         if (result !== expected) {
-            failures.push(`${href} became: ${result} not ${expected}`);
+            failures.push(`${href} became: ${result}`);
         }
     }
     return failures;
@@ -67,10 +67,10 @@ tests["CSS links get created correctly."] = () => {
 tests["Script tags get created correctly."] = () => {
     let failures = [];
     const scripts = {
-        '<script src="index.js" defer></script>': {
+        '<script src="index.js" defer></script>\n': {
             src: 'index.js',
         },
-        '<script src="client.js" type="module" defer></script>': {
+        '<script src="client.js" type="module" defer></script>\n': {
             src: 'client.js',
             module: true,
         },
@@ -87,12 +87,12 @@ tests["Script tags get created correctly."] = () => {
 tests["Favicons get created correctly."] = () => {
     let failures = [];
     const favicons = {
-        '<link rel="icon" type="image/vnd" href="favicon.ico" sizes="48x48">': {
+        '<link rel="icon" type="image/vnd" href="favicon.ico" sizes="48x48">\n': {
             href: 'favicon.ico',
             sizes: '48x48',
             format: 'vnd'
         },
-        '<link rel="apple-touch-icon" type="image/png" href="apple-touch-icon.png" sizes="180x180">': {
+        '<link rel="apple-touch-icon" type="image/png" href="apple-touch-icon.png" sizes="180x180">\n': {
             href: 'apple-touch-icon.png',
             sizes: '180x180',
         },
