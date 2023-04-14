@@ -6,7 +6,7 @@ import Session from './session.js';
 export default class User {
     static create(user, password) {
         user.name = user.name.toLowerCase();
-        const users = User.getUsers();
+        const users = User.all;
 
         if (user.name in users) {
             const error =`The username ${user.name} already exists.`;
@@ -38,7 +38,7 @@ export default class User {
     }
 
     static logIn(name, password) {
-        const users = User.getUsers();
+        const users = User.all;
 
         if (!(name in users)) {
             console.log(`The username ${name} does not exist, log in failed.`);
@@ -79,7 +79,7 @@ export default class User {
         return session.name;
     }
 
-    static getUsers() {
+    static get all() {
         try {
             const json = fs.readFileSync('../data/users.json', 'utf8');
             return JSON.parse(json);
