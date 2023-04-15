@@ -217,8 +217,7 @@ function logOut(request, response) {
 
     response.statusCode = 302;
     response.setHeader('Location', request.headers.referer ?? '/');
-    response.setHeader('Set-Cookie', `sessionID=`);
-    response.setHeader('Expires', 0);
+    response.setHeader('Set-Cookie', 'sessionID=""; Max-Age=0');
     response.end();
 }
 
