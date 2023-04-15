@@ -169,9 +169,9 @@ function setSessionCookie(response, session) {
     if (!session.ID) {
         return;
     }
-    const expires = new Date(session.expires).toUTCString();
-    response.setHeader('Set-Cookie', `sessionID=${encodeURIComponent(session.ID)}`);
-    response.setHeader('Expires', expires);
+    const maxAge = (session.expires - Date.now()) / 1000;
+    console.log(`Session ID '${session.ID}' expires in ${maxAge / 86400} days.`);
+    response.setHeader('Set-Cookie', `sessionID=${encodeURIComponent(session.ID)}; Max-Age:${maxAge}`);
 }
 
 function createAccount(request, response) {
