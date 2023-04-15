@@ -32,6 +32,7 @@ const server = http.createServer((request, response) => {
     switch (path) {
         case '/':
             response.statusCode = 200;
+            response.setHeader('Cache-Control', 'no-cache');
             response.setHeader('Content-Type', 'text/html');
             content = createTasksHTML(name);
             break;
@@ -67,6 +68,16 @@ const server = http.createServer((request, response) => {
             response.setHeader('Content-Type', 'text/html');
             content = createAccountHTML();
             break;
+        case '/edit-user':
+            if (request.method === 'POST') {
+                editUser(request, response);
+                return;
+            }
+            const location = (name) ? `/user/${name}` : '/';
+            response.statusCode = 302;
+            response.setHeader('Location', location);
+            response.end();
+            return;
         case '/login':
             if (request.method === 'POST') {
                 logIn(request, response);
@@ -180,6 +191,28 @@ function setSessionCookie(response, session) {
     response.setHeader('Set-Cookie', `sessionID=${encodeURIComponent(session.ID)}; Max-Age:${maxAge}`);
 }
 
+function editUser(request, response) {
+    handlePostRequest(request, response, (error, body) => {
+        response.setHeader('Cache-Control', 'no-cache');
+        if (error) {
+            console.error(error.message);
+            response.statusCode = error.statusCode;
+            response.end(error.message);
+            return;
+        }
+        const data = JSON.parse(body);
+        const user = { name: data.name }
+        const result = User.edit(user, data.password, data.newPassword);
+        if (result.success) {
+            response.statusCode = 200; // HTTP 200: OK
+        } else {
+            response.statusCode = 400; // HTTP 400: Bad Request
+        }
+        response.setHeader('Content-Type', 'application/json');
+        response.end(JSON.stringify(result));
+    });
+}
+
 function createAccount(request, response) {
     handlePostRequest(request, response, (error, body) => {
         response.setHeader('Cache-Control', 'no-cache');
@@ -288,18 +321,40 @@ function renderUserHTML(name) {
     const size = 30;
     const body = `<header><h1>${title}</h1>${nav}</header>
 <p>Member since: ${created.toLocaleDateString('en-us', { dateStyle: 'long' })}</p>
-<p>${tasksLink}</p>`;
+<p>${tasksLink}</p>
+<form method="post" id="edit-user">
+<input type="hidden" name="name" value="${name}">
+<div>
+    <input size="${size}" maxlength="${Common.passMax}" placeholder="old password" type="password" name="password" required>
+    <span id="valid-password"></span>
+</div>
+<div>
+    <input size="${size}" maxlength="${Common.passMax}" placeholder="new password" type="password" name="newPassword" required>
+    <span id="valid-newPassword"></span>
+</div>
+<button type="submit">Change Password</button>
+<p id="password-strength"></p>
+<p id="auth-feedback"></p>
+</form>`;
     const headers = HTML.createExternalJS('/auth.js', true);
     return createHTML(title, body, headers);
 }
 
-function createLoginHTML(title = "Log In", action = 'login') {
+function createLoginHTML(title = "Log In", id = 'login') {
     const size = 30;
     const body = `<header><h1>${title}</h1></header>
-<form method="post" action="/${action}" id="${action}">
-<div><input size="${size}" maxlength="${Common.nameMax}" placeholder="username" type="text" name="name" required></div>
-<div><input size="${size}" maxlength="${Common.passMax}" placeholder="password" type="password" name="password" required></div>
+<form method="post" id="${id}">
+<div>
+    <input size="${size}" maxlength="${Common.nameMax}" placeholder="username" type="text" name="name" required>
+    <span id="valid-name"></span>
+</div>
+<div>
+    <input size="${size}" maxlength="${Common.passMax}" placeholder="password" type="password" name="password" required>
+    <span id="valid-password"></span>
+</div>
 <button type="submit">${title}</button>
+<p id="password-strength"></p>
+<p id="auth-feedback"></p>
 </form>`;
     const headers = HTML.createExternalJS('/auth.js', true);
     return createHTML(title, body, headers);
