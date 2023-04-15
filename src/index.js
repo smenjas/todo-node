@@ -270,8 +270,8 @@ function createLoginHTML(title = "Log In", action = 'login') {
     const size = 30;
     const body = `<header><h1>${title}</h1></header>
 <form method="post" action="/${action}" id="${action}">
-<input size="${size}" maxlength="${Common.nameMax}" placeholder="username" type="text" name="name" required><br>
-<input size="${size}" maxlength="${Common.passMax}" placeholder="password" type="password" name="password" required><br>
+<div><input size="${size}" maxlength="${Common.nameMax}" placeholder="username" type="text" name="name" required></div>
+<div><input size="${size}" maxlength="${Common.passMax}" placeholder="password" type="password" name="password" required></div>
 <button type="submit">${title}</button>
 </form>`;
     const headers = HTML.createExternalJS('/auth.js', true);
