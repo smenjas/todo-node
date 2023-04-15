@@ -9,19 +9,25 @@ import User from './user.js';
 
 const server = http.createServer((request, response) => {
     const path = url.parse(request.url).pathname;
-    const cookieData = querystring.parse(request.headers.cookie);
-    const sessionID = decodeURIComponent(cookieData.sessionID);
-    const name = User.getUserBySessionID(sessionID);
+    let sessionID = '';
+    let name = '';
+
+    if (request.headers.cookie) {
+        const cookieData = querystring.parse(request.headers.cookie);
+        sessionID = decodeURIComponent(cookieData.sessionID);
+        name = User.getUserBySessionID(sessionID);
+    }
     if (path.indexOf('.') === -1) {
         console.log(request.method, path, `sessionID: '${sessionID}'`, "name:", name);
     }
-    let content = '';
 
     if (sessionID && !name && path !== '/logout') {
-        console.log("Unrecognized sessionID, logging out.");
+        console.log(`Unrecognized sessionID '${sessionID}', logging out.`);
         logOut(request, response);
         return;
     }
+
+    let content = '';
 
     switch (path) {
         case '/':
@@ -203,9 +209,8 @@ function logIn(request, response) {
         const data = querystring.parse(body);
         const session = User.logIn(data.name, data.password);
         setSessionCookie(response, session);
-        const location = (session.ID) ? '/' : request.headers.referer;
         response.statusCode = 302;
-        response.setHeader('Location', location);
+        response.setHeader('Location', '/');
         response.end();
     });
 }
@@ -216,7 +221,7 @@ function logOut(request, response) {
     User.logOut(sessionID);
 
     response.statusCode = 302;
-    response.setHeader('Location', request.headers.referer ?? '/');
+    response.setHeader('Location', '/login');
     response.setHeader('Set-Cookie', 'sessionID=""; Max-Age=0');
     response.end();
 }
