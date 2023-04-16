@@ -31,10 +31,31 @@ function createAccount(data) {
 
         if (result.success) {
             window.location.href = '/';
+            return;
         }
 
         signalValidity(nameInput, nameIndicator, result.success);
         feedback.innerHTML = result.errors.name;
+    });
+}
+
+function logIn(data) {
+    AJAX.processForm('/login', data, () => {
+        if (AJAX.request.readyState !== XMLHttpRequest.DONE) {
+            return;
+        }
+        if (AJAX.request.status !== 200 && AJAX.request.status !== 401) {
+            return;
+        }
+
+        const result = JSON.parse(AJAX.request.responseText);
+
+        if (result.success) {
+            window.location.href = '/';
+            return;
+        }
+
+        feedback.innerHTML = result.error;
     });
 }
 
@@ -94,6 +115,28 @@ if (form) {
             password: event.target.elements.password.value,
         };
         createAccount(data);
+    };
+}
+
+form = document.querySelector('form#login')
+if (form) {
+    const nameInput = document.querySelector('[name=name]');
+    const passwordInput = document.querySelector('[name=password]');
+
+    const nameIndicator = document.querySelector('#valid-name');
+    const passwordIndicator = document.querySelector('#valid-password');
+
+    validateInput(nameInput, nameIndicator, Common.validateName);
+    validateInput(passwordInput, passwordIndicator, Common.validatePassword);
+    checkPassword(passwordInput);
+
+    form.onsubmit = (event) => {
+        event.preventDefault();
+        const data = {
+            name: event.target.elements.name.value,
+            password: event.target.elements.password.value,
+        };
+        logIn(data);
     };
 }
 

@@ -239,18 +239,27 @@ function createAccount(request, response) {
 
 function logIn(request, response) {
     handlePostRequest(request, response, (error, body) => {
+        response.setHeader('Cache-Control', 'no-cache');
         if (error) {
             console.error(error.message);
             response.statusCode = error.statusCode;
             response.end(error.message);
             return;
         }
-        const data = querystring.parse(body);
+        const data = JSON.parse(body);
         const session = User.logIn(data.name, data.password);
-        setSessionCookie(response, session);
-        response.statusCode = 302;
-        response.setHeader('Location', '/');
-        response.end();
+        let result = {};
+        if (session.ID) {
+            result.success = true;
+            setSessionCookie(response, session);
+            response.statusCode = 200; // HTTP 200: OK
+        } else {
+            result.success = false;
+            result.error = "The username or password is incorrect.";
+            response.statusCode = 401; // HTTP 401: Unauthorized
+        }
+        response.setHeader('Content-Type', 'application/json');
+        response.end(JSON.stringify(result));
     });
 }
 
