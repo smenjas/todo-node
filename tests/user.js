@@ -25,7 +25,6 @@ tests["Salt meets requirements."] = () => {
 tests["Hash meets requirements."] = () => {
     let failures = [];
     let count = 0;
-    const password = '12345';
     const hashes = {};
     while (count++ < 3) {
         const salt = User.createSalt();
