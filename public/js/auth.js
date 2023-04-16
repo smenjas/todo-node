@@ -35,7 +35,7 @@ function createAccount(data) {
         }
 
         signalValidity(nameInput, nameIndicator, result.success);
-        feedback.innerHTML = result.errors.name;
+        feedback.innerHTML = result.error;
     });
 }
 
@@ -72,7 +72,7 @@ function editUser(data) {
 
         feedback.innerHTML = result.success ?
             "You have changed your password." :
-            result.errors.password;
+            result.error;
     });
 }
 
