@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/smenjas/todo-node/issues"
   },
-  "homepage": "https://github.com/smenjas/todo-node#readme"
+  "homepage": "https://github.com/smenjas/todo-node#readme",
+  "devDependencies": {
+    "eslint": "^8.38.0"
+  }
 }
