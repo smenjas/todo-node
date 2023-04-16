@@ -287,7 +287,7 @@ function renderHTML(title, body, headers = '') {
 function render404HTML() {
     const title = "HTTP 404: Page Not Found";
     const body = `<header><h1>${title}</h1></header>
-<img src="/404.jpg" alt="John Travolta as Vincent Vega in the movie Pulp Fiction expresses confusion.">`;
+<img src="/404.jpg" alt="Vincent Vega looks confused.">`;
     return renderHTML(title, body);
 }
 
