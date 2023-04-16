@@ -79,6 +79,12 @@ const server = http.createServer((request, response) => {
         case '/logout':
             logOut(request, response);
             return;
+        case `/user/${name}`:
+            response.statusCode = 200;
+            response.setHeader('Cache-Control', 'no-cache');
+            response.setHeader('Content-Type', 'text/html');
+            content = renderUserHTML(name);
+            break;
         case '/404.jpg':
             response.statusCode = 200;
             response.setHeader('Content-Type', 'image/jpeg');
@@ -247,7 +253,8 @@ function createNavHTML(name) {
     let html = '<nav>';
     html += '<ul>';
     if (name) {
-        html += `<li>Logged in as: ${name}</li>`;
+        const nameLink = `<a href="/user/${name}">${name}</a>`;
+        html += `<li>Logged in as: ${nameLink}</li>`;
         html += '<li><a href="/logout">Log Out</a></li>';
     } else {
         html += '<li><a href="/create-account">Create Account</a></li>';
@@ -267,6 +274,22 @@ function createTasksHTML(name) {
         body += '<form id="tasks">\n<ul></ul>\n</form>';
         headers = HTML.createExternalJS('client.js', true);
     }
+    return createHTML(title, body, headers);
+}
+
+function renderUserHTML(name) {
+    const user = User.getUser(name);
+    const created = new Date(user.created);
+    const title = name;
+    const nav = createNavHTML(name);
+    const tasks = Task.getTasks(name);
+    const tasksLinkText = `${tasks.length} ${(tasks.length === 1) ? "task": "tasks"}`;
+    const tasksLink = `<a href="/">${tasksLinkText}</a>`;
+    const size = 30;
+    const body = `<header><h1>${title}</h1>${nav}</header>
+<p>Member since: ${created.toLocaleDateString('en-us', { dateStyle: 'long' })}</p>
+<p>${tasksLink}</p>`;
+    const headers = HTML.createExternalJS('/auth.js', true);
     return createHTML(title, body, headers);
 }
 

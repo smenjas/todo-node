@@ -62,6 +62,20 @@ export default class User {
         Session.delete(sessionID);
     }
 
+    static getUser(name) {
+        if (!name) {
+            return;
+        }
+        const users = User.all;
+        if (!(name in users)) {
+            return;
+        }
+        const user = users[name];
+        delete user.salt;
+        delete user.hash;
+        return user;
+    }
+
     static getUserBySessionID(sessionID) {
         if (!sessionID) {
             return;
