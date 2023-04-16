@@ -9,25 +9,32 @@ import User from './user.js';
 
 const server = http.createServer((request, response) => {
     const path = url.parse(request.url).pathname;
-    const cookieData = querystring.parse(request.headers.cookie);
-    const sessionID = decodeURIComponent(cookieData.sessionID);
-    const name = User.getUserBySessionID(sessionID);
+    let sessionID = '';
+    let name = '';
+
+    if (request.headers.cookie) {
+        const cookieData = querystring.parse(request.headers.cookie);
+        sessionID = decodeURIComponent(cookieData.sessionID);
+        name = User.getUserBySessionID(sessionID);
+    }
     if (path.indexOf('.') === -1) {
         console.log(request.method, path, `sessionID: '${sessionID}'`, "name:", name);
     }
-    let content = '';
 
     if (sessionID && !name && path !== '/logout') {
-        console.log("Unrecognized sessionID, logging out.");
+        console.log(`Unrecognized sessionID '${sessionID}', logging out.`);
         logOut(request, response);
         return;
     }
 
+    let content = '';
+
     switch (path) {
         case '/':
             response.statusCode = 200;
+            response.setHeader('Cache-Control', 'no-cache');
             response.setHeader('Content-Type', 'text/html');
-            content = createTasksHTML(name);
+            content = renderTasksHTML(name);
             break;
         case '/ajax.js':
         case '/auth.js':
@@ -59,8 +66,18 @@ const server = http.createServer((request, response) => {
             }
             response.statusCode = 200;
             response.setHeader('Content-Type', 'text/html');
-            content = createAccountHTML();
+            content = renderAccountHTML();
             break;
+        case '/edit-user':
+            if (request.method === 'POST') {
+                editUser(request, response);
+                return;
+            }
+            const location = (name) ? `/user/${name}` : '/';
+            response.statusCode = 302;
+            response.setHeader('Location', location);
+            response.end();
+            return;
         case '/login':
             if (request.method === 'POST') {
                 logIn(request, response);
@@ -68,11 +85,17 @@ const server = http.createServer((request, response) => {
             }
             response.statusCode = 200;
             response.setHeader('Content-Type', 'text/html');
-            content = createLoginHTML();
+            content = renderLoginHTML();
             break;
         case '/logout':
             logOut(request, response);
             return;
+        case `/user/${name}`:
+            response.statusCode = 200;
+            response.setHeader('Cache-Control', 'no-cache');
+            response.setHeader('Content-Type', 'text/html');
+            content = renderUserHTML(name);
+            break;
         case '/404.jpg':
             response.statusCode = 200;
             response.setHeader('Content-Type', 'image/jpeg');
@@ -95,7 +118,7 @@ const server = http.createServer((request, response) => {
         default:
             response.statusCode = 404;
             response.setHeader('Content-Type', 'text/html');
-            content = create404HTML();
+            content = render404HTML();
             break;
     }
 
@@ -163,9 +186,31 @@ function setSessionCookie(response, session) {
     if (!session.ID) {
         return;
     }
-    const expires = new Date(session.expires).toUTCString();
-    response.setHeader('Set-Cookie', `sessionID=${encodeURIComponent(session.ID)}`);
-    response.setHeader('Expires', expires);
+    const maxAge = (session.expires - Date.now()) / 1000;
+    console.log(`Session ID '${session.ID}' expires in ${maxAge / 86400} days.`);
+    response.setHeader('Set-Cookie', `sessionID=${encodeURIComponent(session.ID)}; Max-Age:${maxAge}`);
+}
+
+function editUser(request, response) {
+    handlePostRequest(request, response, (error, body) => {
+        response.setHeader('Cache-Control', 'no-cache');
+        if (error) {
+            console.error(error.message);
+            response.statusCode = error.statusCode;
+            response.end(error.message);
+            return;
+        }
+        const data = JSON.parse(body);
+        const user = { name: data.name }
+        const result = User.edit(user, data.password, data.newPassword);
+        if (result.success) {
+            response.statusCode = 200; // HTTP 200: OK
+        } else {
+            response.statusCode = 400; // HTTP 400: Bad Request
+        }
+        response.setHeader('Content-Type', 'application/json');
+        response.end(JSON.stringify(result));
+    });
 }
 
 function createAccount(request, response) {
@@ -194,19 +239,27 @@ function createAccount(request, response) {
 
 function logIn(request, response) {
     handlePostRequest(request, response, (error, body) => {
+        response.setHeader('Cache-Control', 'no-cache');
         if (error) {
             console.error(error.message);
             response.statusCode = error.statusCode;
             response.end(error.message);
             return;
         }
-        const data = querystring.parse(body);
+        const data = JSON.parse(body);
         const session = User.logIn(data.name, data.password);
-        setSessionCookie(response, session);
-        const location = (session.ID) ? '/' : request.headers.referer;
-        response.statusCode = 302;
-        response.setHeader('Location', location);
-        response.end();
+        let result = {};
+        if (session.ID) {
+            result.success = true;
+            setSessionCookie(response, session);
+            response.statusCode = 200; // HTTP 200: OK
+        } else {
+            result.success = false;
+            result.error = "The username or password is incorrect.";
+            response.statusCode = 401; // HTTP 401: Unauthorized
+        }
+        response.setHeader('Content-Type', 'application/json');
+        response.end(JSON.stringify(result));
     });
 }
 
@@ -216,34 +269,34 @@ function logOut(request, response) {
     User.logOut(sessionID);
 
     response.statusCode = 302;
-    response.setHeader('Location', request.headers.referer ?? '/');
-    response.setHeader('Set-Cookie', `sessionID=`);
-    response.setHeader('Expires', 0);
+    response.setHeader('Location', '/login');
+    response.setHeader('Set-Cookie', 'sessionID=""; Max-Age=0');
     response.end();
 }
 
-function createHTML(title, body, headers = '') {
-    headers = HTML.createExternalCSS('main.css') + headers;
-    headers += HTML.createFavicon(`/apple-touch-icon.png`, `180x180`);
-    headers += HTML.createFavicon(`/favicon.ico`, `48x48`, 'vnd');
-    for (const size of [16, 32, 180, 192, 512]) {
-        headers += HTML.createFavicon(`/favicon-${size}.png`, `${size}x${size}`);
+function renderHTML(title, body, headers = '') {
+    headers = HTML.stylesheet('/main.css') + headers;
+    headers += HTML.icon(`/apple-touch-icon.png`, `180x180`);
+    headers += HTML.icon(`/favicon.ico`, `48x48`, 'vnd');
+    for (const size of [16, 32, 192, 512]) {
+        headers += HTML.icon(`/favicon-${size}.png`, `${size}x${size}`);
     }
-    return HTML.create(title, body, headers, 'en-us');
+    return HTML.render(title, body, headers, 'en-us');
 }
 
-function create404HTML() {
+function render404HTML() {
     const title = "HTTP 404: Page Not Found";
     const body = `<header><h1>${title}</h1></header>
-<img src="404.jpg" alt="John Travolta as Vincent Vega in the movie Pulp Fiction expresses confusion.">`;
-    return createHTML(title, body);
+<img src="/404.jpg" alt="Vincent Vega looks confused.">`;
+    return renderHTML(title, body);
 }
 
-function createNavHTML(name) {
+function renderNavHTML(name) {
     let html = '<nav>';
     html += '<ul>';
     if (name) {
-        html += `<li>Logged in as: ${name}</li>`;
+        const nameLink = `<a href="/user/${name}">${name}</a>`;
+        html += `<li>Logged in as: ${nameLink}</li>`;
         html += '<li><a href="/logout">Log Out</a></li>';
     } else {
         html += '<li><a href="/create-account">Create Account</a></li>';
@@ -254,30 +307,68 @@ function createNavHTML(name) {
     return html;
 }
 
-function createTasksHTML(name) {
+function renderTasksHTML(name) {
     const title = "ToDo: Node";
-    const nav = createNavHTML(name);
+    const nav = renderNavHTML(name);
     let body = `<header><h1>${title}</h1>${nav}</header>`;
     let headers = '';
     if (name) {
         body += '<form id="tasks">\n<ul></ul>\n</form>';
-        headers = HTML.createExternalJS('client.js', true);
+        headers = HTML.script('client.js', true);
     }
-    return createHTML(title, body, headers);
+    return renderHTML(title, body, headers);
 }
 
-function createLoginHTML(title = "Log In", action = 'login') {
+function renderUserHTML(name) {
+    const user = User.getUser(name);
+    const created = new Date(user.created);
+    const title = name;
+    const nav = renderNavHTML(name);
+    const tasks = Task.getTasks(name);
+    const tasksLinkText = `${tasks.length} ${(tasks.length === 1) ? "task": "tasks"}`;
+    const tasksLink = `<a href="/">${tasksLinkText}</a>`;
+    const size = 30;
+    const body = `<header><h1>${title}</h1>${nav}</header>
+<p>Member since: ${created.toLocaleDateString('en-us', { dateStyle: 'long' })}</p>
+<p>${tasksLink}</p>
+<form method="post" id="edit-user">
+<input type="hidden" name="name" value="${name}">
+<div>
+    <input size="${size}" maxlength="${Common.passMax}" placeholder="old password" type="password" name="password" required>
+    <span id="valid-password"></span>
+</div>
+<div>
+    <input size="${size}" maxlength="${Common.passMax}" placeholder="new password" type="password" name="newPassword" required>
+    <span id="valid-newPassword"></span>
+</div>
+<button type="submit">Change Password</button>
+<p id="password-strength"></p>
+<p id="auth-feedback"></p>
+</form>`;
+    const headers = HTML.script('/auth.js', true);
+    return renderHTML(title, body, headers);
+}
+
+function renderLoginHTML(title = "Log In", id = 'login') {
     const size = 30;
     const body = `<header><h1>${title}</h1></header>
-<form method="post" action="${action}" id="${action}">
-<input size="${size}" maxlength="${Common.nameMax}" placeholder="username" type="text" name="name" required><br>
-<input size="${size}" maxlength="${Common.passMax}" placeholder="password" type="password" name="password" required><br>
+<form method="post" id="${id}">
+<div>
+    <input size="${size}" maxlength="${Common.nameMax}" placeholder="username" type="text" name="name" required>
+    <span id="valid-name"></span>
+</div>
+<div>
+    <input size="${size}" maxlength="${Common.passMax}" placeholder="password" type="password" name="password" required>
+    <span id="valid-password"></span>
+</div>
 <button type="submit">${title}</button>
+<p id="password-strength"></p>
+<p id="auth-feedback"></p>
 </form>`;
-    const headers = HTML.createExternalJS('auth.js', true);
-    return createHTML(title, body, headers);
+    const headers = HTML.script('/auth.js', true);
+    return renderHTML(title, body, headers);
 }
 
-function createAccountHTML() {
-    return createLoginHTML("Create an Account", 'create-account');
+function renderAccountHTML() {
+    return renderLoginHTML("Create an Account", 'create-account');
 }

@@ -35,8 +35,10 @@ button, input {
     background: #eee;
     color: black;
 }
-button, input, form p, form span {
+p, form, button, input {
     font-size: 1.5rem;
+}
+form span, button, input {
     padding: 0.3rem;
 }
 

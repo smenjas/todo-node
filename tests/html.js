@@ -24,7 +24,7 @@ tests["HTML gets created correctly."] = () => {
         language: 'en-us',
     };
     for (const [expected, page] of Object.entries(pages)) {
-        const result = HTML.create(page.title, page.body, page.headers, page.language);
+        const result = HTML.render(page.title, page.body, page.headers, page.language);
         if (result !== expected) {
             failures.push(`${JSON.stringify(page)} became: ${result}`);
         }
@@ -56,7 +56,7 @@ tests["CSS links get created correctly."] = () => {
         '<link rel="stylesheet" href="style.css">\n': 'style.css',
     };
     for (const [expected, href] of Object.entries(stylesheets)) {
-        const result = HTML.createExternalCSS(href);
+        const result = HTML.stylesheet(href);
         if (result !== expected) {
             failures.push(`${href} became: ${result}`);
         }
@@ -76,7 +76,7 @@ tests["Script tags get created correctly."] = () => {
         },
     };
     for (const [expected, script] of Object.entries(scripts)) {
-        const result = HTML.createExternalJS(script.src, script.module);
+        const result = HTML.script(script.src, script.module);
         if (result !== expected) {
             failures.push(`${JSON.stringify(script)} became: ${result}`);
         }
@@ -98,7 +98,7 @@ tests["Favicons get created correctly."] = () => {
         },
     };
     for (const [expected, favicon] of Object.entries(favicons)) {
-        const result = HTML.createFavicon(favicon.href, favicon.sizes, favicon.format);
+        const result = HTML.icon(favicon.href, favicon.sizes, favicon.format);
         if (result !== expected) {
             failures.push(`${JSON.stringify(favicon)} became: ${result}`);
         }

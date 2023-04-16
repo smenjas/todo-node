@@ -37,6 +37,53 @@ export default class User {
         return { success: true };
     }
 
+    static edit(input, oldPassword, newPassword = null) {
+        if (!newPassword) {
+            const error = "Invalid password";
+            console.error(input.name, "provided an empty password");
+            return { success: false, errors: { password: error } };
+        }
+
+        if (newPassword === oldPassword) {
+            const error = "Passwords are the same";
+            console.error(input.name, "provided the same password");
+            return { success: false, errors: { password: error } };
+        }
+
+        input.name = input.name.toLowerCase();
+        const users = User.all;
+
+        if (!(input.name in users)) {
+            const error = "Invalid username";
+            console.error("Username", input.name, "does not exist");
+            return { success: false, errors: { name: error } };
+        }
+
+        if (!Common.validatePassword(newPassword)) {
+            const error = "Invalid password";
+            console.error(input.name, "provided an invalid password");
+            return { success: false, errors: { password: error } };
+        }
+
+        const user = users[input.name];
+        const hash = User.hashPassword(oldPassword, user.salt);
+
+        if (hash !== user.hash) {
+            const error = "Authentication failed";
+            console.log(input.name, "provided an incorrect password");
+            return { success: false, errors: { password: error } };
+        }
+
+        user.salt = User.createSalt();
+        user.hash = User.hashPassword(newPassword, user.salt);
+        console.log(user);
+
+        users[user.name] = user;
+        User.all = users;
+
+        return { success: true };
+    }
+
     static logIn(name, password) {
         const users = User.all;
 
@@ -60,6 +107,20 @@ export default class User {
         const name = User.getUserBySessionID(sessionID);
         console.log("Logging out:", name);
         Session.delete(sessionID);
+    }
+
+    static getUser(name) {
+        if (!name) {
+            return;
+        }
+        const users = User.all;
+        if (!(name in users)) {
+            return;
+        }
+        const user = users[name];
+        delete user.salt;
+        delete user.hash;
+        return user;
     }
 
     static getUserBySessionID(sessionID) {
