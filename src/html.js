@@ -34,7 +34,7 @@ ${body}
     }
 
     static escape(str) {
-       return str.replaceAll('&', '&amp;')
+        return str.replaceAll('&', '&amp;')
            .replaceAll('<', '&lt;')
            .replaceAll('>', '&gt;')
            .replaceAll('"', '&quot;')
