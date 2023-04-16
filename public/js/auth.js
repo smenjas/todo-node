@@ -27,15 +27,15 @@ function createAccount(data) {
             return;
         }
 
-        const result = JSON.parse(AJAX.request.responseText);
+        const error = JSON.parse(AJAX.request.responseText);
 
-        if (result.success) {
+        if (!error) {
             window.location.href = '/';
             return;
         }
 
-        signalValidity(nameInput, nameIndicator, result.success);
-        feedback.innerHTML = result.error;
+        signalValidity(nameInput, nameIndicator, !error);
+        feedback.innerHTML = error;
     });
 }
 
@@ -48,14 +48,14 @@ function logIn(data) {
             return;
         }
 
-        const result = JSON.parse(AJAX.request.responseText);
+        const error = JSON.parse(AJAX.request.responseText);
 
-        if (result.success) {
+        if (!error) {
             window.location.href = '/';
             return;
         }
 
-        feedback.innerHTML = result.error;
+        feedback.innerHTML = error;
     });
 }
 
@@ -68,11 +68,9 @@ function editUser(data) {
             return;
         }
 
-        const result = JSON.parse(AJAX.request.responseText);
+        const error = JSON.parse(AJAX.request.responseText);
 
-        feedback.innerHTML = result.success ?
-            "You have changed your password." :
-            result.error;
+        feedback.innerHTML = error ? error : "You have changed your password.";
     });
 }
 

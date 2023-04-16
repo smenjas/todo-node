@@ -11,19 +11,19 @@ export default class User {
         if (user.name in users) {
             const error =`The username ${user.name} already exists.`;
             console.log(error);
-            return { success: false, error: error };
+            return error;
         }
 
         if (!Common.validateName(user.name)) {
             const error = "Invalid username";
             console.log(error);
-            return { success: false, error: error };
+            return error;
         }
 
         if (!Common.validatePassword(password)) {
             const error = "Invalid password";
             console.log(error);
-            return { success: false, error: error };
+            return error;
         }
 
         user.salt = User.createSalt();
@@ -34,20 +34,20 @@ export default class User {
         users[user.name] = user;
         User.all = users;
 
-        return { success: true };
+        return "";
     }
 
     static edit(input, oldPassword, newPassword = null) {
         if (!newPassword) {
             const error = "Invalid password";
             console.error(input.name, "provided an empty password");
-            return { success: false, error: error };
+            return error;
         }
 
         if (newPassword === oldPassword) {
             const error = "Passwords are the same";
             console.error(input.name, "provided the same password");
-            return { success: false, error: error };
+            return error;
         }
 
         input.name = input.name.toLowerCase();
@@ -56,13 +56,13 @@ export default class User {
         if (!(input.name in users)) {
             const error = "Invalid username";
             console.error("Username", input.name, "does not exist");
-            return { success: false, error: error };
+            return error;
         }
 
         if (!Common.validatePassword(newPassword)) {
             const error = "Invalid password";
             console.error(input.name, "provided an invalid password");
-            return { success: false, error: error };
+            return error;
         }
 
         const user = users[input.name];
@@ -71,7 +71,7 @@ export default class User {
         if (hash !== user.hash) {
             const error = "Authentication failed";
             console.log(input.name, "provided an incorrect password");
-            return { success: false, error: error };
+            return error;
         }
 
         user.salt = User.createSalt();
@@ -81,7 +81,7 @@ export default class User {
         users[user.name] = user;
         User.all = users;
 
-        return { success: true };
+        return "";
     }
 
     static logIn(name, password) {

@@ -202,14 +202,10 @@ function editUser(request, response) {
         }
         const data = JSON.parse(body);
         const user = { name: data.name }
-        const result = User.edit(user, data.password, data.newPassword);
-        if (result.success) {
-            response.statusCode = 200; // HTTP 200: OK
-        } else {
-            response.statusCode = 400; // HTTP 400: Bad Request
-        }
+        const userError = User.edit(user, data.password, data.newPassword);
+        response.statusCode = userError ? 400 : 200; // 400: Bad Request, 200: OK
         response.setHeader('Content-Type', 'application/json');
-        response.end(JSON.stringify(result));
+        response.end(JSON.stringify(userError));
     });
 }
 
@@ -224,8 +220,8 @@ function createAccount(request, response) {
         }
         const data = JSON.parse(body);
         const user = { name: data.name }
-        const result = User.create(user, data.password);
-        if (result.success) {
+        const userError = User.create(user, data.password);
+        if (!userError) {
             const session = User.logIn(data.name, data.password);
             setSessionCookie(response, session);
             response.statusCode = 201; // HTTP 201: Created
@@ -233,7 +229,7 @@ function createAccount(request, response) {
             response.statusCode = 409; // HTTP 409: Conflict
         }
         response.setHeader('Content-Type', 'application/json');
-        response.end(JSON.stringify(result));
+        response.end(JSON.stringify(userError));
     });
 }
 
@@ -248,18 +244,16 @@ function logIn(request, response) {
         }
         const data = JSON.parse(body);
         const session = User.logIn(data.name, data.password);
-        let result = {};
+        let userError = "";
         if (session.ID) {
-            result.success = true;
             setSessionCookie(response, session);
             response.statusCode = 200; // HTTP 200: OK
         } else {
-            result.success = false;
-            result.error = "The username or password is incorrect.";
+            userError = "The username or password is incorrect.";
             response.statusCode = 401; // HTTP 401: Unauthorized
         }
         response.setHeader('Content-Type', 'application/json');
-        response.end(JSON.stringify(result));
+        response.end(JSON.stringify(userError));
     });
 }
 
