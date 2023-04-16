@@ -38,6 +38,6 @@ ${body}
            .replaceAll('<', '&lt;')
            .replaceAll('>', '&gt;')
            .replaceAll('"', '&quot;')
-           .replaceAll("'", '&#39;');
+           .replaceAll('\'', '&#39;');
     }
 };

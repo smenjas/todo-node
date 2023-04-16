@@ -8,7 +8,7 @@ export default class Session {
             return JSON.parse(json);
         }
         catch (e) {
-            console.log("Caught Exception, path does not exist:", e.path);
+            console.log('Caught Exception, path does not exist:', e.path);
         }
         return {};
     }
@@ -27,7 +27,7 @@ export default class Session {
         }
         const sessions = Session.all;
         if (!(sessionID in sessions)) {
-            console.log("sessionID not found:", sessionID);
+            console.log('sessionID not found:', sessionID);
             return;
         }
         delete sessions[sessionID];

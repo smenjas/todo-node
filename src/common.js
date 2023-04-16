@@ -18,7 +18,7 @@ export default class Common {
         if (hex) {
             combos += /[a-f]/i.test(string) ? 6 : 0;
             if (/[^0-9a-f]/i.test(string)) {
-                console.error("Not hexadecimal:", string);
+                console.error('Not hexadecimal:', string);
             }
         } else {
             combos += /[a-z]/.test(string) ? 26 : 0;

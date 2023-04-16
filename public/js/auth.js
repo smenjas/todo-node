@@ -4,7 +4,7 @@ import Common from '/common.js';
 function checkPassword(input) {
     input.addEventListener('input', event => {
         const entropy = Common.calculateEntropy(input.value);
-        feedback.innerHTML = "";
+        feedback.innerHTML = '';
         strength.innerHTML = createPasswordMeter(entropy);
     });
 }
@@ -14,7 +14,7 @@ function createPasswordMeter(entropy) {
     const low = 104; // 16 bytes, using all character classes, minus one
     const high = 210; // 32 bytes, using all character classes
     const max = 420; // 64 bytes, using all character classes
-    const strength = (entropy >= high) ? "High" : (entropy > low) ? "Medium" : "Low";
+    const strength = (entropy >= high) ? 'High' : (entropy > low) ? 'Medium' : 'Low';
     return `<meter min="${min}" max="${max}" low="${low}" high="${high}" optimum="${max}" value="${entropy}">Password strength: ${strength}</meter>`;
 }
 
@@ -70,7 +70,7 @@ function editUser(data) {
 
         const error = JSON.parse(AJAX.request.responseText);
 
-        feedback.innerHTML = error ? error : "You have changed your password.";
+        feedback.innerHTML = error ? error : 'You have changed your password.';
     });
 }
 
