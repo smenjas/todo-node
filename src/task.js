@@ -11,7 +11,6 @@ export default class Task {
             const error = (e.code === 'ENOENT') ? `${name} has no tasks yet.` : e;
             console.log(error);
         }
-
         return [];
     }
 

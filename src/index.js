@@ -313,7 +313,7 @@ function renderTasksHTML(name) {
     let body = `<header><h1>${title}</h1>${nav}</header>`;
     let headers = '';
     if (name) {
-        body += '<form id="tasks">\n<ul></ul>\n</form>';
+        body += '<form id="tasks"><ul></ul></form>';
         headers = HTML.script('client.js', true);
     }
     return renderHTML(title, body, headers);

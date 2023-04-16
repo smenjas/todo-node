@@ -10,7 +10,6 @@ export default class Session {
         catch (e) {
             console.log("Caught Exception, path does not exist:", e.path);
         }
-
         return {};
     }
 
