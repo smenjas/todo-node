@@ -34,7 +34,7 @@ const server = http.createServer((request, response) => {
             response.statusCode = 200;
             response.setHeader('Cache-Control', 'no-cache');
             response.setHeader('Content-Type', 'text/html');
-            content = createTasksHTML(name);
+            content = renderTasksHTML(name);
             break;
         case '/ajax.js':
         case '/auth.js':
@@ -66,7 +66,7 @@ const server = http.createServer((request, response) => {
             }
             response.statusCode = 200;
             response.setHeader('Content-Type', 'text/html');
-            content = createAccountHTML();
+            content = renderAccountHTML();
             break;
         case '/edit-user':
             if (request.method === 'POST') {
@@ -85,7 +85,7 @@ const server = http.createServer((request, response) => {
             }
             response.statusCode = 200;
             response.setHeader('Content-Type', 'text/html');
-            content = createLoginHTML();
+            content = renderLoginHTML();
             break;
         case '/logout':
             logOut(request, response);
@@ -118,7 +118,7 @@ const server = http.createServer((request, response) => {
         default:
             response.statusCode = 404;
             response.setHeader('Content-Type', 'text/html');
-            content = create404HTML();
+            content = render404HTML();
             break;
     }
 
@@ -274,24 +274,24 @@ function logOut(request, response) {
     response.end();
 }
 
-function createHTML(title, body, headers = '') {
-    headers = HTML.createExternalCSS('/main.css') + headers;
-    headers += HTML.createFavicon(`/apple-touch-icon.png`, `180x180`);
-    headers += HTML.createFavicon(`/favicon.ico`, `48x48`, 'vnd');
+function renderHTML(title, body, headers = '') {
+    headers = HTML.stylesheet('/main.css') + headers;
+    headers += HTML.icon(`/apple-touch-icon.png`, `180x180`);
+    headers += HTML.icon(`/favicon.ico`, `48x48`, 'vnd');
     for (const size of [16, 32, 192, 512]) {
-        headers += HTML.createFavicon(`/favicon-${size}.png`, `${size}x${size}`);
+        headers += HTML.icon(`/favicon-${size}.png`, `${size}x${size}`);
     }
-    return HTML.create(title, body, headers, 'en-us');
+    return HTML.render(title, body, headers, 'en-us');
 }
 
-function create404HTML() {
+function render404HTML() {
     const title = "HTTP 404: Page Not Found";
     const body = `<header><h1>${title}</h1></header>
 <img src="/404.jpg" alt="John Travolta as Vincent Vega in the movie Pulp Fiction expresses confusion.">`;
-    return createHTML(title, body);
+    return renderHTML(title, body);
 }
 
-function createNavHTML(name) {
+function renderNavHTML(name) {
     let html = '<nav>';
     html += '<ul>';
     if (name) {
@@ -307,23 +307,23 @@ function createNavHTML(name) {
     return html;
 }
 
-function createTasksHTML(name) {
+function renderTasksHTML(name) {
     const title = "ToDo: Node";
-    const nav = createNavHTML(name);
+    const nav = renderNavHTML(name);
     let body = `<header><h1>${title}</h1>${nav}</header>`;
     let headers = '';
     if (name) {
         body += '<form id="tasks">\n<ul></ul>\n</form>';
-        headers = HTML.createExternalJS('client.js', true);
+        headers = HTML.script('client.js', true);
     }
-    return createHTML(title, body, headers);
+    return renderHTML(title, body, headers);
 }
 
 function renderUserHTML(name) {
     const user = User.getUser(name);
     const created = new Date(user.created);
     const title = name;
-    const nav = createNavHTML(name);
+    const nav = renderNavHTML(name);
     const tasks = Task.getTasks(name);
     const tasksLinkText = `${tasks.length} ${(tasks.length === 1) ? "task": "tasks"}`;
     const tasksLink = `<a href="/">${tasksLinkText}</a>`;
@@ -345,11 +345,11 @@ function renderUserHTML(name) {
 <p id="password-strength"></p>
 <p id="auth-feedback"></p>
 </form>`;
-    const headers = HTML.createExternalJS('/auth.js', true);
-    return createHTML(title, body, headers);
+    const headers = HTML.script('/auth.js', true);
+    return renderHTML(title, body, headers);
 }
 
-function createLoginHTML(title = "Log In", id = 'login') {
+function renderLoginHTML(title = "Log In", id = 'login') {
     const size = 30;
     const body = `<header><h1>${title}</h1></header>
 <form method="post" id="${id}">
@@ -365,10 +365,10 @@ function createLoginHTML(title = "Log In", id = 'login') {
 <p id="password-strength"></p>
 <p id="auth-feedback"></p>
 </form>`;
-    const headers = HTML.createExternalJS('/auth.js', true);
-    return createHTML(title, body, headers);
+    const headers = HTML.script('/auth.js', true);
+    return renderHTML(title, body, headers);
 }
 
-function createAccountHTML() {
-    return createLoginHTML("Create an Account", 'create-account');
+function renderAccountHTML() {
+    return renderLoginHTML("Create an Account", 'create-account');
 }

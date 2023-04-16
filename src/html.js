@@ -1,5 +1,5 @@
 export default class HTML {
-    static create(title = '', body = '', headers = '', language = 'en') {
+    static render(title = '', body = '', headers = '', language = 'en') {
         title = HTML.escape(title);
         return `<!DOCTYPE html>
 <html lang="${language}">
@@ -15,18 +15,18 @@ ${body}
 </html>`;
     }
 
-    static createExternalCSS(href) {
+    static stylesheet(href) {
         href = HTML.escape(href);
         return `<link rel="stylesheet" href="${href}">\n`;
     }
 
-    static createExternalJS(src, module = false) {
+    static script(src, module = false) {
         src = HTML.escape(src);
         const moduleAttr = (module) ? ' type="module"' : '';
         return `<script src="${src}"${moduleAttr} defer></script>\n`;
     }
 
-    static createFavicon(href, sizes = null, format = 'png') {
+    static icon(href, sizes = null, format = 'png') {
         href = HTML.escape(href);
         const sizesAttr = (sizes) ? ` sizes="${sizes}"` : '';
         const rel = (href.includes('apple-touch-icon')) ? 'apple-touch-icon' : 'icon';
