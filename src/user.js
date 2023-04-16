@@ -69,7 +69,7 @@ export default class User {
         const hash = User.hashPassword(oldPassword, user.salt);
 
         if (hash !== user.hash) {
-            const error = "Authentication failed";
+            const error = "Incorrect password";
             console.log(input.name, "provided an incorrect password");
             return error;
         }
