@@ -148,7 +148,7 @@ function handlePostRequest(request, response, callback) {
 }
 
 function downloadTasks(request, response, name) {
-    handlePostRequest(request, response, (error, body) => {
+    handlePostRequest(request, response, error => {
         response.setHeader('Cache-Control', 'no-cache');
         if (error) {
             console.error(error.message);
