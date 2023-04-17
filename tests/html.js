@@ -2,7 +2,7 @@ import HTML from '../src/html.js';
 
 const tests = {};
 
-tests['HTML gets created correctly.'] = () => {
+tests['HTML gets rendered correctly.'] = () => {
     let failures = [];
     const pages = {};
     const html = `<!DOCTYPE html>
@@ -50,7 +50,7 @@ tests['HTML special characters get escaped.'] = () => {
     return failures;
 };
 
-tests['CSS links get created correctly.'] = () => {
+tests['CSS links get rendered correctly.'] = () => {
     let failures = [];
     const stylesheets = {
         '<link rel="stylesheet" href="style.css">\n': 'style.css',
@@ -64,7 +64,7 @@ tests['CSS links get created correctly.'] = () => {
     return failures;
 };
 
-tests['Script tags get created correctly.'] = () => {
+tests['Script tags get rendered correctly.'] = () => {
     let failures = [];
     const scripts = {
         '<script src="index.js" defer></script>\n': {
@@ -84,7 +84,7 @@ tests['Script tags get created correctly.'] = () => {
     return failures;
 };
 
-tests['Favicons get created correctly.'] = () => {
+tests['Favicons get rendered correctly.'] = () => {
     let failures = [];
     const favicons = {
         '<link rel="icon" type="image/vnd" href="favicon.ico" sizes="48x48">\n': {
