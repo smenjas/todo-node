@@ -5,6 +5,7 @@
   "description": "A to-do app built with Node.js",
   "main": "index.js",
   "scripts": {
+    "dev": "cd src && ../node_modules/nodemon/bin/nodemon.js .",
     "lint": "node_modules/eslint/bin/eslint.js *.js src/*.js tests/*.js public/js/*.js",
     "test": "time node test.js"
   },
@@ -22,6 +23,7 @@
   },
   "homepage": "https://github.com/smenjas/todo-node#readme",
   "devDependencies": {
-    "eslint": "^8.38.0"
+    "eslint": "^8.38.0",
+    "nodemon": "^2.0.22"
   }
 }
