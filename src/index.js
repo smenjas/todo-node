@@ -39,6 +39,8 @@ const server = http.createServer((request, response) => {
     case '/ajax.js':
     case '/auth.js':
     case '/client.js':
+    case '/edit-user.js':
+    case '/login.js':
         response.statusCode = 200;
         response.setHeader('Content-Type', 'text/javascript');
         content = fs.readFileSync(`../public/js${path}`, 'utf8');
@@ -338,7 +340,7 @@ function renderUserHTML(name) {
 <p id="password-strength"></p>
 <p id="auth-feedback"></p>
 </form>`;
-    const headers = HTML.script('/auth.js', true);
+    const headers = HTML.script('/edit-user.js', true);
     return renderHTML(title, body, headers);
 }
 
@@ -358,7 +360,7 @@ function renderLoginHTML(title = 'Log In', id = 'login') {
 <p id="password-strength"></p>
 <p id="auth-feedback"></p>
 </form>`;
-    const headers = HTML.script('/auth.js', true);
+    const headers = HTML.script('/login.js', true);
     return renderHTML(title, body, headers);
 }
 
