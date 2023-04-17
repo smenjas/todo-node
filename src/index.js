@@ -73,9 +73,8 @@ const server = http.createServer((request, response) => {
             editUser(request, response);
             return;
         }
-        const location = (name) ? `/user/${name}` : '/';
         response.statusCode = 302;
-        response.setHeader('Location', location);
+        response.setHeader('Location', name ? `/user/${name}` : '/');
         response.end();
         return;
     case '/login':
