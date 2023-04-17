@@ -18,7 +18,8 @@ tests["Username requirements are enforced."] = () => {
         'Username_is_long': false,
     };
     // Printable, non-word ASCII characters
-    const chars = ' !"#$%&\'()*+,-./:;<=>?@[\]^`{|}~';
+    const chars = ' !"#$%&\'()*+,-./:;<=>?@[\\]^`{|}~';
+    console.log(chars);
     for (const char of chars) {
         const name = `alice${char}`;
         names[name] = false;
