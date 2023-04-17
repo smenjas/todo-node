@@ -157,7 +157,7 @@ export default class User {
             fs.writeFileSync('../data/users.json', JSON.stringify(users));
         }
         catch (e) {
-            console.error(error);
+            console.error(e);
         }
     }
 
