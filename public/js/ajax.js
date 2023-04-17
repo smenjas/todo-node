@@ -3,18 +3,18 @@ export default class AJAX {
 
     static describeRequestState(readyState) {
         switch (readyState) {
-            case XMLHttpRequest.UNSENT:
-                return "AJAX connection has not been opened yet.";
-            case XMLHttpRequest.OPENED:
-                return "AJAX request opened and in progress.";
-            case XMLHttpRequest.HEADERS_RECEIVED:
-                return "AJAX request sent, headers and status are available.";
-            case XMLHttpRequest.LOADING:
-                return "AJAX request in progress.";
-            case XMLHttpRequest.DONE:
-                return "AJAX request complete.";
-            default:
-                return "ERROR: AJAX state not recognized.";
+        case XMLHttpRequest.UNSENT:
+            return 'AJAX connection has not been opened yet.';
+        case XMLHttpRequest.OPENED:
+            return 'AJAX request opened and in progress.';
+        case XMLHttpRequest.HEADERS_RECEIVED:
+            return 'AJAX request sent, headers and status are available.';
+        case XMLHttpRequest.LOADING:
+            return 'AJAX request in progress.';
+        case XMLHttpRequest.DONE:
+            return 'AJAX request complete.';
+        default:
+            return 'ERROR: AJAX state not recognized.';
         }
     }
 
@@ -27,7 +27,7 @@ export default class AJAX {
             }
             const requestStatus = AJAX.describeRequestState(AJAX.request.readyState);
             const responseText = (AJAX.request.responseText.length > 128) ?
-                AJAX.request.responseText.substring(0, 128) + "..." :
+                AJAX.request.responseText.substring(0, 128) + '...' :
                 AJAX.request.responseText;
             let logMessage = `${requestStatus} ${responseText}`;
             if (AJAX.request.status !== 0) {
@@ -36,14 +36,14 @@ export default class AJAX {
             console.log(logMessage);
         }
         catch (e) {
-            console.log("Caught Exception:", e.description);
+            console.log('Caught Exception:', e.description);
         }
-    };
+    }
 
     static post(url) {
         AJAX.request = new XMLHttpRequest();
         AJAX.request.onreadystatechange = AJAX.handleHttpResponse;
-        AJAX.request.open("POST", url, true);
+        AJAX.request.open('POST', url, true);
         return AJAX.request;
     }
 
@@ -53,7 +53,7 @@ export default class AJAX {
         AJAX.request.onerror = () => {
             console.error(AJAX.request.statusText);
         };
-        AJAX.request.setRequestHeader("Content-Type", "application/json");
+        AJAX.request.setRequestHeader('Content-Type', 'application/json');
         AJAX.request.send(JSON.stringify(data));
     }
 
@@ -68,7 +68,7 @@ export default class AJAX {
 
     static upload(url, data) {
         AJAX.request = AJAX.post(url);
-        AJAX.request.setRequestHeader("Content-Type", "application/json");
+        AJAX.request.setRequestHeader('Content-Type', 'application/json');
         AJAX.request.send(JSON.stringify(data));
     }
-};
+}

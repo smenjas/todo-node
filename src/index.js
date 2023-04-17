@@ -18,7 +18,7 @@ const server = http.createServer((request, response) => {
         name = User.getUserBySessionID(sessionID);
     }
     if (path.indexOf('.') === -1) {
-        console.log(request.method, path, `sessionID: '${sessionID}'`, "name:", name);
+        console.log(request.method, path, `sessionID: '${sessionID}'`, 'name:', name);
     }
 
     if (sessionID && !name && path !== '/logout') {
@@ -30,96 +30,95 @@ const server = http.createServer((request, response) => {
     let content = '';
 
     switch (path) {
-        case '/':
-            response.statusCode = 200;
-            response.setHeader('Cache-Control', 'no-cache');
-            response.setHeader('Content-Type', 'text/html');
-            content = renderTasksHTML(name);
-            break;
-        case '/ajax.js':
-        case '/auth.js':
-        case '/client.js':
-            response.statusCode = 200;
-            response.setHeader('Content-Type', 'text/javascript');
-            content = fs.readFileSync(`../public/js${path}`, 'utf8');
-            break;
-        case '/common.js':
-            response.statusCode = 200;
-            response.setHeader('Content-Type', 'text/javascript');
-            content = fs.readFileSync('common.js', 'utf8');
-            break;
-        case '/main.css':
-            response.statusCode = 200;
-            response.setHeader('Content-Type', 'text/css');
-            content = fs.readFileSync('../public/css/main.css', 'utf8');
-            break;
-        case '/download-tasks':
-            downloadTasks(request, response, name);
+    case '/':
+        response.statusCode = 200;
+        response.setHeader('Cache-Control', 'no-cache');
+        response.setHeader('Content-Type', 'text/html');
+        content = renderTasksHTML(name);
+        break;
+    case '/ajax.js':
+    case '/auth.js':
+    case '/client.js':
+        response.statusCode = 200;
+        response.setHeader('Content-Type', 'text/javascript');
+        content = fs.readFileSync(`../public/js${path}`, 'utf8');
+        break;
+    case '/common.js':
+        response.statusCode = 200;
+        response.setHeader('Content-Type', 'text/javascript');
+        content = fs.readFileSync('common.js', 'utf8');
+        break;
+    case '/main.css':
+        response.statusCode = 200;
+        response.setHeader('Content-Type', 'text/css');
+        content = fs.readFileSync('../public/css/main.css', 'utf8');
+        break;
+    case '/download-tasks':
+        downloadTasks(request, response, name);
+        return;
+    case '/upload-tasks':
+        uploadTasks(request, response, name);
+        return;
+    case '/create-account':
+        if (request.method === 'POST') {
+            createAccount(request, response);
             return;
-        case '/upload-tasks':
-            uploadTasks(request, response, name);
+        }
+        response.statusCode = 200;
+        response.setHeader('Content-Type', 'text/html');
+        content = renderAccountHTML();
+        break;
+    case '/edit-user':
+        if (request.method === 'POST') {
+            editUser(request, response);
             return;
-        case '/create-account':
-            if (request.method === 'POST') {
-                createAccount(request, response);
-                return;
-            }
-            response.statusCode = 200;
-            response.setHeader('Content-Type', 'text/html');
-            content = renderAccountHTML();
-            break;
-        case '/edit-user':
-            if (request.method === 'POST') {
-                editUser(request, response);
-                return;
-            }
-            const location = (name) ? `/user/${name}` : '/';
-            response.statusCode = 302;
-            response.setHeader('Location', location);
-            response.end();
+        }
+        response.statusCode = 302;
+        response.setHeader('Location', name ? `/user/${name}` : '/');
+        response.end();
+        return;
+    case '/login':
+        if (request.method === 'POST') {
+            logIn(request, response);
             return;
-        case '/login':
-            if (request.method === 'POST') {
-                logIn(request, response);
-                return;
-            }
-            response.statusCode = 200;
-            response.setHeader('Content-Type', 'text/html');
-            content = renderLoginHTML();
-            break;
-        case '/logout':
-            logOut(request, response);
-            return;
-        case `/user/${name}`:
-            response.statusCode = 200;
-            response.setHeader('Cache-Control', 'no-cache');
-            response.setHeader('Content-Type', 'text/html');
-            content = renderUserHTML(name);
-            break;
-        case '/404.jpg':
-            response.statusCode = 200;
-            response.setHeader('Content-Type', 'image/jpeg');
-            content = fs.readFileSync('../public/img/404.jpg');
-            break;
-        case '/favicon.ico':
-            response.statusCode = 200;
-            response.setHeader('Content-Type', 'image/vnd');
-            content = fs.readFileSync(`../public/img${path}`);
-            break;
-        case '/apple-touch-icon.png':
-        case '/favicon-16.png':
-        case '/favicon-32.png':
-        case '/favicon-192.png':
-        case '/favicon-512.png':
-            response.statusCode = 200;
-            response.setHeader('Content-Type', 'image/png');
-            content = fs.readFileSync(`../public/img${path}`);
-            break;
-        default:
-            response.statusCode = 404;
-            response.setHeader('Content-Type', 'text/html');
-            content = render404HTML();
-            break;
+        }
+        response.statusCode = 200;
+        response.setHeader('Content-Type', 'text/html');
+        content = renderLoginHTML();
+        break;
+    case '/logout':
+        logOut(request, response);
+        return;
+    case `/user/${name}`:
+        response.statusCode = 200;
+        response.setHeader('Cache-Control', 'no-cache');
+        response.setHeader('Content-Type', 'text/html');
+        content = renderUserHTML(name);
+        break;
+    case '/404.jpg':
+        response.statusCode = 200;
+        response.setHeader('Content-Type', 'image/jpeg');
+        content = fs.readFileSync('../public/img/404.jpg');
+        break;
+    case '/favicon.ico':
+        response.statusCode = 200;
+        response.setHeader('Content-Type', 'image/vnd');
+        content = fs.readFileSync(`../public/img${path}`);
+        break;
+    case '/apple-touch-icon.png':
+    case '/favicon-16.png':
+    case '/favicon-32.png':
+    case '/favicon-192.png':
+    case '/favicon-512.png':
+        response.statusCode = 200;
+        response.setHeader('Content-Type', 'image/png');
+        content = fs.readFileSync(`../public/img${path}`);
+        break;
+    default:
+        response.statusCode = 404;
+        response.setHeader('Content-Type', 'text/html');
+        content = render404HTML();
+        break;
     }
 
     response.setHeader('Content-Length', Buffer.byteLength(content));
@@ -149,7 +148,7 @@ function handlePostRequest(request, response, callback) {
 }
 
 function downloadTasks(request, response, name) {
-    handlePostRequest(request, response, (error, body) => {
+    handlePostRequest(request, response, error => {
         response.setHeader('Cache-Control', 'no-cache');
         if (error) {
             console.error(error.message);
@@ -201,7 +200,7 @@ function editUser(request, response) {
             return;
         }
         const data = JSON.parse(body);
-        const user = { name: data.name }
+        const user = { name: data.name };
         const userError = User.edit(user, data.password, data.newPassword);
         response.statusCode = userError ? 400 : 200; // 400: Bad Request, 200: OK
         response.setHeader('Content-Type', 'application/json');
@@ -219,7 +218,7 @@ function createAccount(request, response) {
             return;
         }
         const data = JSON.parse(body);
-        const user = { name: data.name }
+        const user = { name: data.name };
         const userError = User.create(user, data.password);
         if (!userError) {
             const session = User.logIn(data.name, data.password);
@@ -244,12 +243,12 @@ function logIn(request, response) {
         }
         const data = JSON.parse(body);
         const session = User.logIn(data.name, data.password);
-        let userError = "";
+        let userError = '';
         if (session.ID) {
             setSessionCookie(response, session);
             response.statusCode = 200; // HTTP 200: OK
         } else {
-            userError = "The username or password is incorrect.";
+            userError = 'The username or password is incorrect.';
             response.statusCode = 401; // HTTP 401: Unauthorized
         }
         response.setHeader('Content-Type', 'application/json');
@@ -270,8 +269,8 @@ function logOut(request, response) {
 
 function renderHTML(title, body, headers = '') {
     headers = HTML.stylesheet('/main.css') + headers;
-    headers += HTML.icon(`/apple-touch-icon.png`, `180x180`);
-    headers += HTML.icon(`/favicon.ico`, `48x48`, 'vnd');
+    headers += HTML.icon('/apple-touch-icon.png', '180x180');
+    headers += HTML.icon('/favicon.ico', '48x48', 'vnd');
     for (const size of [16, 32, 192, 512]) {
         headers += HTML.icon(`/favicon-${size}.png`, `${size}x${size}`);
     }
@@ -279,7 +278,7 @@ function renderHTML(title, body, headers = '') {
 }
 
 function render404HTML() {
-    const title = "HTTP 404: Page Not Found";
+    const title = 'HTTP 404: Page Not Found';
     const body = `<header><h1>${title}</h1></header>
 <img src="/404.jpg" alt="Vincent Vega looks confused.">`;
     return renderHTML(title, body);
@@ -302,7 +301,7 @@ function renderNavHTML(name) {
 }
 
 function renderTasksHTML(name) {
-    const title = "ToDo: Node";
+    const title = 'ToDo: Node';
     const nav = renderNavHTML(name);
     let body = `<header><h1>${title}</h1>${nav}</header>`;
     let headers = '';
@@ -319,7 +318,7 @@ function renderUserHTML(name) {
     const title = name;
     const nav = renderNavHTML(name);
     const tasks = Task.getTasks(name);
-    const tasksLinkText = `${tasks.length} ${(tasks.length === 1) ? "task": "tasks"}`;
+    const tasksLinkText = `${tasks.length} ${(tasks.length === 1) ? 'task': 'tasks'}`;
     const tasksLink = `<a href="/">${tasksLinkText}</a>`;
     const size = 30;
     const body = `<header><h1>${title}</h1>${nav}</header>
@@ -343,7 +342,7 @@ function renderUserHTML(name) {
     return renderHTML(title, body, headers);
 }
 
-function renderLoginHTML(title = "Log In", id = 'login') {
+function renderLoginHTML(title = 'Log In', id = 'login') {
     const size = 30;
     const body = `<header><h1>${title}</h1></header>
 <form method="post" id="${id}">
@@ -364,5 +363,5 @@ function renderLoginHTML(title = "Log In", id = 'login') {
 }
 
 function renderAccountHTML() {
-    return renderLoginHTML("Create an Account", 'create-account');
+    return renderLoginHTML('Create an Account', 'create-account');
 }

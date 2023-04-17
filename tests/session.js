@@ -3,7 +3,7 @@ import Session from '../src/session.js';
 
 const tests = {};
 
-tests["Session ID meets requirements."] = () => {
+tests['Session ID meets requirements.'] = () => {
     let failures = [];
     let count = 0;
     const sessionIDs = {};

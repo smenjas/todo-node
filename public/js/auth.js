@@ -2,9 +2,9 @@ import AJAX from '/ajax.js';
 import Common from '/common.js';
 
 function checkPassword(input) {
-    input.addEventListener('input', event => {
+    input.addEventListener('input', () => {
         const entropy = Common.calculateEntropy(input.value);
-        feedback.innerHTML = "";
+        feedback.innerHTML = '';
         strength.innerHTML = createPasswordMeter(entropy);
     });
 }
@@ -14,7 +14,7 @@ function createPasswordMeter(entropy) {
     const low = 104; // 16 bytes, using all character classes, minus one
     const high = 210; // 32 bytes, using all character classes
     const max = 420; // 64 bytes, using all character classes
-    const strength = (entropy >= high) ? "High" : (entropy > low) ? "Medium" : "Low";
+    const strength = (entropy >= high) ? 'High' : (entropy > low) ? 'Medium' : 'Low';
     return `<meter min="${min}" max="${max}" low="${low}" high="${high}" optimum="${max}" value="${entropy}">Password strength: ${strength}</meter>`;
 }
 
@@ -70,7 +70,7 @@ function editUser(data) {
 
         const error = JSON.parse(AJAX.request.responseText);
 
-        feedback.innerHTML = error ? error : "You have changed your password.";
+        feedback.innerHTML = error ? error : 'You have changed your password.';
     });
 }
 
@@ -85,7 +85,7 @@ function signalValidity(input, indicator, valid) {
 }
 
 function validateInput(input, indicator, validate) {
-    input.addEventListener('input', event => {
+    input.addEventListener('input', () => {
         const valid = validate(input.value);
         signalValidity(input, indicator, valid);
     });
@@ -94,7 +94,7 @@ function validateInput(input, indicator, validate) {
 const feedback = document.querySelector('#auth-feedback');
 const strength = document.querySelector('#password-strength');
 
-let form = document.querySelector('form#create-account')
+let form = document.querySelector('form#create-account');
 if (form) {
     const nameInput = document.querySelector('[name=name]');
     const passwordInput = document.querySelector('[name=password]');
@@ -106,7 +106,7 @@ if (form) {
     validateInput(passwordInput, passwordIndicator, Common.validatePassword);
     checkPassword(passwordInput);
 
-    form.onsubmit = (event) => {
+    form.onsubmit = event => {
         event.preventDefault();
         const data = {
             name: event.target.elements.name.value,
@@ -116,7 +116,7 @@ if (form) {
     };
 }
 
-form = document.querySelector('form#login')
+form = document.querySelector('form#login');
 if (form) {
     const nameInput = document.querySelector('[name=name]');
     const passwordInput = document.querySelector('[name=password]');
@@ -128,7 +128,7 @@ if (form) {
     validateInput(passwordInput, passwordIndicator, Common.validatePassword);
     checkPassword(passwordInput);
 
-    form.onsubmit = (event) => {
+    form.onsubmit = event => {
         event.preventDefault();
         const data = {
             name: event.target.elements.name.value,
@@ -150,7 +150,7 @@ if (form) {
     validateInput(newPasswordInput, newPasswordIndicator, Common.validatePassword);
     checkPassword(newPasswordInput);
 
-    form.onsubmit = (event) => {
+    form.onsubmit = event => {
         event.preventDefault();
         const data = {
             name: event.target.elements.name.value,

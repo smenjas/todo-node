@@ -3,7 +3,7 @@ import User from '../src/user.js';
 
 const tests = {};
 
-tests["Salt meets requirements."] = () => {
+tests['Salt meets requirements.'] = () => {
     let failures = [];
     let count = 0;
     const salts = {};
@@ -22,10 +22,9 @@ tests["Salt meets requirements."] = () => {
     return failures;
 };
 
-tests["Hash meets requirements."] = () => {
+tests['Hash meets requirements.'] = () => {
     let failures = [];
     let count = 0;
-    const password = '12345';
     const hashes = {};
     while (count++ < 3) {
         const salt = User.createSalt();

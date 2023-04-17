@@ -2,7 +2,7 @@ import Common from '../src/common.js';
 
 const tests = {};
 
-tests["Username requirements are enforced."] = () => {
+tests['Username requirements are enforced.'] = () => {
     let failures = [];
     const names = {
         '': false,
@@ -18,7 +18,7 @@ tests["Username requirements are enforced."] = () => {
         'Username_is_long': false,
     };
     // Printable, non-word ASCII characters
-    const chars = ' !"#$%&\'()*+,-./:;<=>?@[\]^`{|}~'
+    const chars = ' !"#$%&\'()*+,-./:;<=>?@[\\]^`{|}~';
     for (const char of chars) {
         const name = `alice${char}`;
         names[name] = false;
@@ -26,14 +26,14 @@ tests["Username requirements are enforced."] = () => {
     for (const name in names) {
         const result = Common.validateName(name);
         if (result !== names[name]) {
-            const action = (result) ? "rejected" : "accepted";
+            const action = (result) ? 'rejected' : 'accepted';
             failures.push(`Username not ${action}: ${name}`);
         }
     }
     return failures;
 };
 
-tests["Password requirements are enforced."] = () => {
+tests['Password requirements are enforced.'] = () => {
     let failures = [];
     const passwords = {
         'This is my password.': true,
@@ -47,14 +47,14 @@ tests["Password requirements are enforced."] = () => {
         //console.log(password, new Blob([password]).size);
         const result = Common.validatePassword(password);
         if (result !== passwords[password]) {
-            const action = (result) ? "rejected" : "accepted";
+            const action = (result) ? 'rejected' : 'accepted';
             failures.push(`Password not ${action}: ${password}`);
         }
     }
     return failures;
 };
 
-tests["Entropy calculations make sense."] = () => {
+tests['Entropy calculations make sense.'] = () => {
     let failures = [];
     const strings = {
         '': 0,

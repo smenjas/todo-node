@@ -15,13 +15,13 @@ export default class User {
         }
 
         if (!Common.validateName(user.name)) {
-            const error = "Invalid username";
+            const error = 'Invalid username';
             console.log(error);
             return error;
         }
 
         if (!Common.validatePassword(password)) {
-            const error = "Invalid password";
+            const error = 'Invalid password';
             console.log(error);
             return error;
         }
@@ -34,19 +34,19 @@ export default class User {
         users[user.name] = user;
         User.all = users;
 
-        return "";
+        return '';
     }
 
     static edit(input, oldPassword, newPassword = null) {
         if (!newPassword) {
-            const error = "Invalid password";
-            console.error(input.name, "provided an empty password");
+            const error = 'Invalid password';
+            console.error(input.name, 'provided an empty password');
             return error;
         }
 
         if (newPassword === oldPassword) {
-            const error = "Passwords are the same";
-            console.error(input.name, "provided the same password");
+            const error = 'Passwords are the same';
+            console.error(input.name, 'provided the same password');
             return error;
         }
 
@@ -54,14 +54,14 @@ export default class User {
         const users = User.all;
 
         if (!(input.name in users)) {
-            const error = "Invalid username";
-            console.error("Username", input.name, "does not exist");
+            const error = 'Invalid username';
+            console.error('Username', input.name, 'does not exist');
             return error;
         }
 
         if (!Common.validatePassword(newPassword)) {
-            const error = "Invalid password";
-            console.error(input.name, "provided an invalid password");
+            const error = 'Invalid password';
+            console.error(input.name, 'provided an invalid password');
             return error;
         }
 
@@ -69,8 +69,8 @@ export default class User {
         const hash = User.hashPassword(oldPassword, user.salt);
 
         if (hash !== user.hash) {
-            const error = "Incorrect password";
-            console.log(input.name, "provided an incorrect password");
+            const error = 'Incorrect password';
+            console.log(input.name, 'provided an incorrect password');
             return error;
         }
 
@@ -81,7 +81,7 @@ export default class User {
         users[user.name] = user;
         User.all = users;
 
-        return "";
+        return '';
     }
 
     static logIn(name, password) {
@@ -105,7 +105,7 @@ export default class User {
 
     static logOut(sessionID) {
         const name = User.getUserBySessionID(sessionID);
-        console.log("Logging out:", name);
+        console.log('Logging out:', name);
         Session.delete(sessionID);
     }
 
@@ -157,7 +157,7 @@ export default class User {
             fs.writeFileSync('../data/users.json', JSON.stringify(users));
         }
         catch (e) {
-            console.error(error);
+            console.error(e);
         }
     }
 
@@ -171,4 +171,4 @@ export default class User {
         password = password.toString().normalize();
         return crypto.pbkdf2Sync(password, salt, iterations, keylen, 'sha512').toString('hex');
     }
-};
+}

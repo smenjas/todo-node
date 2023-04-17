@@ -5,6 +5,7 @@
   "description": "A to-do app built with Node.js",
   "main": "index.js",
   "scripts": {
+    "lint": "node_modules/eslint/bin/eslint.js *.js src/*.js tests/*.js public/js/*.js",
     "test": "time node test.js"
   },
   "repository": {
@@ -19,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/smenjas/todo-node/issues"
   },
-  "homepage": "https://github.com/smenjas/todo-node#readme"
+  "homepage": "https://github.com/smenjas/todo-node#readme",
+  "devDependencies": {
+    "eslint": "^8.38.0"
+  }
 }
