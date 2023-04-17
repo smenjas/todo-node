@@ -7,11 +7,11 @@ export default class Auth {
         input.addEventListener('input', () => {
             const entropy = Common.calculateEntropy(input.value);
             feedback.innerHTML = '';
-            strength.innerHTML = Auth.createPasswordMeter(entropy);
+            strength.innerHTML = Auth.renderPasswordMeter(entropy);
         });
     }
 
-    static createPasswordMeter(entropy) {
+    static renderPasswordMeter(entropy) {
         const min = 0; // Empty
         const low = 104; // 16 bytes, using all character classes, minus one
         const high = 210; // 32 bytes, using all character classes
