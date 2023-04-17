@@ -171,4 +171,4 @@ export default class User {
         password = password.toString().normalize();
         return crypto.pbkdf2Sync(password, salt, iterations, keylen, 'sha512').toString('hex');
     }
-};
+}

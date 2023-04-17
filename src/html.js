@@ -40,4 +40,4 @@ ${body}
             .replaceAll('"', '&quot;')
             .replaceAll('\'', '&#39;');
     }
-};
+}

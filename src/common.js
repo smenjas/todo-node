@@ -40,4 +40,4 @@ export default class Common {
         const re = new RegExp(`^[\\x20-\\x7E]{${Common.passMin},${Common.passMax}}$`);
         return re.test(password);
     }
-};
+}

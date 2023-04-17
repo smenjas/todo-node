@@ -38,7 +38,7 @@ export default class AJAX {
         catch (e) {
             console.log('Caught Exception:', e.description);
         }
-    };
+    }
 
     static post(url) {
         AJAX.request = new XMLHttpRequest();
@@ -71,4 +71,4 @@ export default class AJAX {
         AJAX.request.setRequestHeader('Content-Type', 'application/json');
         AJAX.request.send(JSON.stringify(data));
     }
-};
+}

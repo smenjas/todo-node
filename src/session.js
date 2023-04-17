@@ -56,4 +56,4 @@ export default class Session {
     static generate() {
         return crypto.randomBytes(16).toString('base64');
     }
-};
+}
