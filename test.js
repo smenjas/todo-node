@@ -22,7 +22,9 @@ runTests(sessionTests);
 runTests(userTests);
 
 if (totalFailures) {
-    console.log(totalFailures, 'tests failed.');
-} else {
-    console.log('All tests passed.');
+    const happened = (totalFailures === 1) ? 'test failed.' : 'tests failed.';
+    console.log(totalFailures, happened);
+    throw new Error(`${totalFailures} ${happened}`);
 }
+
+console.log('All tests passed.');
