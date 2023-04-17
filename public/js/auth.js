@@ -2,7 +2,7 @@ import AJAX from '/ajax.js';
 import Common from '/common.js';
 
 function checkPassword(input) {
-    input.addEventListener('input', event => {
+    input.addEventListener('input', () => {
         const entropy = Common.calculateEntropy(input.value);
         feedback.innerHTML = '';
         strength.innerHTML = createPasswordMeter(entropy);
@@ -85,7 +85,7 @@ function signalValidity(input, indicator, valid) {
 }
 
 function validateInput(input, indicator, validate) {
-    input.addEventListener('input', event => {
+    input.addEventListener('input', () => {
         const valid = validate(input.value);
         signalValidity(input, indicator, valid);
     });
@@ -106,7 +106,7 @@ if (form) {
     validateInput(passwordInput, passwordIndicator, Common.validatePassword);
     checkPassword(passwordInput);
 
-    form.onsubmit = (event) => {
+    form.onsubmit = event => {
         event.preventDefault();
         const data = {
             name: event.target.elements.name.value,
@@ -128,7 +128,7 @@ if (form) {
     validateInput(passwordInput, passwordIndicator, Common.validatePassword);
     checkPassword(passwordInput);
 
-    form.onsubmit = (event) => {
+    form.onsubmit = event => {
         event.preventDefault();
         const data = {
             name: event.target.elements.name.value,
@@ -150,7 +150,7 @@ if (form) {
     validateInput(newPasswordInput, newPasswordIndicator, Common.validatePassword);
     checkPassword(newPasswordInput);
 
-    form.onsubmit = (event) => {
+    form.onsubmit = event => {
         event.preventDefault();
         const data = {
             name: event.target.elements.name.value,
