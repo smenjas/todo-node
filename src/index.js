@@ -335,9 +335,9 @@ function renderUserHTML(name) {
 <div>
     <input size="${size}" maxlength="${Common.passMax}" placeholder="new password" type="password" name="newPassword" required>
     <span id="valid-newPassword"></span>
+    <span id="password-strength"></span>
 </div>
 <button type="submit">Change Password</button>
-<p id="password-strength"></p>
 <p id="auth-feedback"></p>
 </form>`;
     const headers = HTML.script('/edit-user.js', true);
@@ -355,9 +355,9 @@ function renderLoginHTML(title = 'Log In', id = 'login') {
 <div>
     <input size="${size}" maxlength="${Common.passMax}" placeholder="password" type="password" name="password" required>
     <span id="valid-password"></span>
+    <span id="password-strength"></span>
 </div>
 <button type="submit">${title}</button>
-<p id="password-strength"></p>
 <p id="auth-feedback"></p>
 </form>`;
     const headers = HTML.script('/login.js', true);

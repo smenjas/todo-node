@@ -46,6 +46,13 @@ form#create-account input,
 form#login input {
     max-width: calc(100vw - 4rem);
 }
+#valid-name,
+#valid-password,
+#valid-newPassword {
+    display: inline-block;
+    width: 1rem;
+    padding: 0.2rem 0.3rem;
+}
 
 button#add-task {
     font-size: 2.0rem;
