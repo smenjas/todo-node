@@ -94,13 +94,15 @@ function validateInput(input, indicator, validate) {
 const feedback = document.querySelector('#auth-feedback');
 const strength = document.querySelector('#password-strength');
 
+let nameInput, passwordInput, nameIndicator, passwordIndicator;
+
 let form = document.querySelector('form#create-account');
 if (form) {
-    const nameInput = document.querySelector('[name=name]');
-    const passwordInput = document.querySelector('[name=password]');
+    nameInput = document.querySelector('[name=name]');
+    passwordInput = document.querySelector('[name=password]');
 
-    const nameIndicator = document.querySelector('#valid-name');
-    const passwordIndicator = document.querySelector('#valid-password');
+    nameIndicator = document.querySelector('#valid-name');
+    passwordIndicator = document.querySelector('#valid-password');
 
     validateInput(nameInput, nameIndicator, Common.validateName);
     validateInput(passwordInput, passwordIndicator, Common.validatePassword);
@@ -118,11 +120,11 @@ if (form) {
 
 form = document.querySelector('form#login');
 if (form) {
-    const nameInput = document.querySelector('[name=name]');
-    const passwordInput = document.querySelector('[name=password]');
+    nameInput = document.querySelector('[name=name]');
+    passwordInput = document.querySelector('[name=password]');
 
-    const nameIndicator = document.querySelector('#valid-name');
-    const passwordIndicator = document.querySelector('#valid-password');
+    nameIndicator = document.querySelector('#valid-name');
+    passwordIndicator = document.querySelector('#valid-password');
 
     validateInput(nameInput, nameIndicator, Common.validateName);
     validateInput(passwordInput, passwordIndicator, Common.validatePassword);
