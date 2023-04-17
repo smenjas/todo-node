@@ -30,96 +30,96 @@ const server = http.createServer((request, response) => {
     let content = '';
 
     switch (path) {
-        case '/':
-            response.statusCode = 200;
-            response.setHeader('Cache-Control', 'no-cache');
-            response.setHeader('Content-Type', 'text/html');
-            content = renderTasksHTML(name);
-            break;
-        case '/ajax.js':
-        case '/auth.js':
-        case '/client.js':
-            response.statusCode = 200;
-            response.setHeader('Content-Type', 'text/javascript');
-            content = fs.readFileSync(`../public/js${path}`, 'utf8');
-            break;
-        case '/common.js':
-            response.statusCode = 200;
-            response.setHeader('Content-Type', 'text/javascript');
-            content = fs.readFileSync('common.js', 'utf8');
-            break;
-        case '/main.css':
-            response.statusCode = 200;
-            response.setHeader('Content-Type', 'text/css');
-            content = fs.readFileSync('../public/css/main.css', 'utf8');
-            break;
-        case '/download-tasks':
-            downloadTasks(request, response, name);
+    case '/':
+        response.statusCode = 200;
+        response.setHeader('Cache-Control', 'no-cache');
+        response.setHeader('Content-Type', 'text/html');
+        content = renderTasksHTML(name);
+        break;
+    case '/ajax.js':
+    case '/auth.js':
+    case '/client.js':
+        response.statusCode = 200;
+        response.setHeader('Content-Type', 'text/javascript');
+        content = fs.readFileSync(`../public/js${path}`, 'utf8');
+        break;
+    case '/common.js':
+        response.statusCode = 200;
+        response.setHeader('Content-Type', 'text/javascript');
+        content = fs.readFileSync('common.js', 'utf8');
+        break;
+    case '/main.css':
+        response.statusCode = 200;
+        response.setHeader('Content-Type', 'text/css');
+        content = fs.readFileSync('../public/css/main.css', 'utf8');
+        break;
+    case '/download-tasks':
+        downloadTasks(request, response, name);
+        return;
+    case '/upload-tasks':
+        uploadTasks(request, response, name);
+        return;
+    case '/create-account':
+        if (request.method === 'POST') {
+            createAccount(request, response);
             return;
-        case '/upload-tasks':
-            uploadTasks(request, response, name);
+        }
+        response.statusCode = 200;
+        response.setHeader('Content-Type', 'text/html');
+        content = renderAccountHTML();
+        break;
+    case '/edit-user':
+        if (request.method === 'POST') {
+            editUser(request, response);
             return;
-        case '/create-account':
-            if (request.method === 'POST') {
-                createAccount(request, response);
-                return;
-            }
-            response.statusCode = 200;
-            response.setHeader('Content-Type', 'text/html');
-            content = renderAccountHTML();
-            break;
-        case '/edit-user':
-            if (request.method === 'POST') {
-                editUser(request, response);
-                return;
-            }
-            const location = (name) ? `/user/${name}` : '/';
-            response.statusCode = 302;
-            response.setHeader('Location', location);
-            response.end();
+        }
+        const location = (name) ? `/user/${name}` : '/';
+        response.statusCode = 302;
+        response.setHeader('Location', location);
+        response.end();
+        return;
+    case '/login':
+        if (request.method === 'POST') {
+            logIn(request, response);
             return;
-        case '/login':
-            if (request.method === 'POST') {
-                logIn(request, response);
-                return;
-            }
-            response.statusCode = 200;
-            response.setHeader('Content-Type', 'text/html');
-            content = renderLoginHTML();
-            break;
-        case '/logout':
-            logOut(request, response);
-            return;
-        case `/user/${name}`:
-            response.statusCode = 200;
-            response.setHeader('Cache-Control', 'no-cache');
-            response.setHeader('Content-Type', 'text/html');
-            content = renderUserHTML(name);
-            break;
-        case '/404.jpg':
-            response.statusCode = 200;
-            response.setHeader('Content-Type', 'image/jpeg');
-            content = fs.readFileSync('../public/img/404.jpg');
-            break;
-        case '/favicon.ico':
-            response.statusCode = 200;
-            response.setHeader('Content-Type', 'image/vnd');
-            content = fs.readFileSync(`../public/img${path}`);
-            break;
-        case '/apple-touch-icon.png':
-        case '/favicon-16.png':
-        case '/favicon-32.png':
-        case '/favicon-192.png':
-        case '/favicon-512.png':
-            response.statusCode = 200;
-            response.setHeader('Content-Type', 'image/png');
-            content = fs.readFileSync(`../public/img${path}`);
-            break;
-        default:
-            response.statusCode = 404;
-            response.setHeader('Content-Type', 'text/html');
-            content = render404HTML();
-            break;
+        }
+        response.statusCode = 200;
+        response.setHeader('Content-Type', 'text/html');
+        content = renderLoginHTML();
+        break;
+    case '/logout':
+        logOut(request, response);
+        return;
+    case `/user/${name}`:
+        response.statusCode = 200;
+        response.setHeader('Cache-Control', 'no-cache');
+        response.setHeader('Content-Type', 'text/html');
+        content = renderUserHTML(name);
+        break;
+    case '/404.jpg':
+        response.statusCode = 200;
+        response.setHeader('Content-Type', 'image/jpeg');
+        content = fs.readFileSync('../public/img/404.jpg');
+        break;
+    case '/favicon.ico':
+        response.statusCode = 200;
+        response.setHeader('Content-Type', 'image/vnd');
+        content = fs.readFileSync(`../public/img${path}`);
+        break;
+    case '/apple-touch-icon.png':
+    case '/favicon-16.png':
+    case '/favicon-32.png':
+    case '/favicon-192.png':
+    case '/favicon-512.png':
+        response.statusCode = 200;
+        response.setHeader('Content-Type', 'image/png');
+        content = fs.readFileSync(`../public/img${path}`);
+        break;
+    default:
+        response.statusCode = 404;
+        response.setHeader('Content-Type', 'text/html');
+        content = render404HTML();
+        break;
     }
 
     response.setHeader('Content-Length', Buffer.byteLength(content));

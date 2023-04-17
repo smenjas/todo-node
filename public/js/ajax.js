@@ -3,18 +3,18 @@ export default class AJAX {
 
     static describeRequestState(readyState) {
         switch (readyState) {
-            case XMLHttpRequest.UNSENT:
-                return 'AJAX connection has not been opened yet.';
-            case XMLHttpRequest.OPENED:
-                return 'AJAX request opened and in progress.';
-            case XMLHttpRequest.HEADERS_RECEIVED:
-                return 'AJAX request sent, headers and status are available.';
-            case XMLHttpRequest.LOADING:
-                return 'AJAX request in progress.';
-            case XMLHttpRequest.DONE:
-                return 'AJAX request complete.';
-            default:
-                return 'ERROR: AJAX state not recognized.';
+        case XMLHttpRequest.UNSENT:
+            return 'AJAX connection has not been opened yet.';
+        case XMLHttpRequest.OPENED:
+            return 'AJAX request opened and in progress.';
+        case XMLHttpRequest.HEADERS_RECEIVED:
+            return 'AJAX request sent, headers and status are available.';
+        case XMLHttpRequest.LOADING:
+            return 'AJAX request in progress.';
+        case XMLHttpRequest.DONE:
+            return 'AJAX request complete.';
+        default:
+            return 'ERROR: AJAX state not recognized.';
         }
     }
 
