@@ -201,7 +201,7 @@ function editUser(request, response) {
             return;
         }
         const data = JSON.parse(body);
-        const user = { name: data.name }
+        const user = { name: data.name };
         const userError = User.edit(user, data.password, data.newPassword);
         response.statusCode = userError ? 400 : 200; // 400: Bad Request, 200: OK
         response.setHeader('Content-Type', 'application/json');
@@ -219,7 +219,7 @@ function createAccount(request, response) {
             return;
         }
         const data = JSON.parse(body);
-        const user = { name: data.name }
+        const user = { name: data.name };
         const userError = User.create(user, data.password);
         if (!userError) {
             const session = User.logIn(data.name, data.password);

@@ -94,7 +94,7 @@ function validateInput(input, indicator, validate) {
 const feedback = document.querySelector('#auth-feedback');
 const strength = document.querySelector('#password-strength');
 
-let form = document.querySelector('form#create-account')
+let form = document.querySelector('form#create-account');
 if (form) {
     const nameInput = document.querySelector('[name=name]');
     const passwordInput = document.querySelector('[name=password]');
@@ -116,7 +116,7 @@ if (form) {
     };
 }
 
-form = document.querySelector('form#login')
+form = document.querySelector('form#login');
 if (form) {
     const nameInput = document.querySelector('[name=name]');
     const passwordInput = document.querySelector('[name=password]');
