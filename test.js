@@ -1,7 +1,9 @@
-import commonTests from './tests/common.js';
-import htmlTests from './tests/html.js';
-import sessionTests from './tests/session.js';
-import userTests from './tests/user.js';
+import fs from 'fs';
+
+const files = fs.readdirSync('./tests', {withFileTypes: true})
+    .filter(item => !item.isDirectory())
+    .map(item => item.name)
+    .filter(name => name.endsWith('.js'));
 
 let totalFailures = 0;
 
@@ -16,10 +18,10 @@ function runTests(tests) {
     }
 }
 
-runTests(commonTests);
-runTests(htmlTests);
-runTests(sessionTests);
-runTests(userTests);
+for (const file of files) {
+    const tests = await import(`./tests/${file}`);
+    runTests(tests.default);
+}
 
 if (totalFailures) {
     const happened = (totalFailures === 1) ? 'test failed.' : 'tests failed.';
