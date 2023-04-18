@@ -56,4 +56,15 @@ export default class Session {
     static generate() {
         return crypto.randomBytes(16).toString('base64');
     }
+
+    static prune(sessions) {
+        for (const sessionID in sessions) {
+            const session = sessions[sessionID];
+            if (session.expires <= Date.now()) {
+                delete sessions[sessionID];
+                const expires = new Date(session.expires);
+                console.log(`Deleted ${session.name}'s session ID '${sessionID}' that expired at ${expires.toISOString()}.`);
+            }
+        }
+    }
 }

@@ -27,4 +27,28 @@ tests['Session ID meets requirements.'] = () => {
     return failures;
 };
 
+tests['Expired sessions get pruned.'] = () => {
+    let failures = [];
+    let count = -2;
+    const now = Date.now();
+    const sessions = {};
+    while (count++ < 0) {
+        const sessionID = Session.generate();
+        sessions[sessionID] = {
+            name: 'ryan',
+            expires: now - (count * 86400000),
+        };
+    }
+    //console.log(sessions);
+    Session.prune(sessions);
+    //console.log(sessions);
+    for (const sessionID in sessions) {
+        const session = sessions[sessionID];
+        if (session.expires <= now) {
+            failures.push(`Did not prune session that expired ${now - session.expires} seconds before the cutoff.`);
+        }
+    }
+    return failures;
+};
+
 export default tests;
