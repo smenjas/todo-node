@@ -28,11 +28,11 @@ Start the node server with:
 ```sh
 npm run dev
 ```
-You can run the automated test suite with:
+Run the automated test suite with:
 ```sh
 npm run test
 ```
-You can identify syntax and style issues with:
+Identify syntax and style issues with:
 ```sh
 npm run lint
 ```
