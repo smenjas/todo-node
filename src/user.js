@@ -109,6 +109,20 @@ export default class User {
         Session.delete(sessionID);
     }
 
+    static logOutOthers(sessionID) {
+        if (!sessionID) {
+            return;
+        }
+        const name = User.getUserBySessionID(sessionID);
+        const sessionIDs = User.getSessionIDs(name);
+
+        for (const id of sessionIDs) {
+            if (id !== sessionID) {
+                User.logOut(id);
+            }
+        }
+    }
+
     static getSessionIDs(name) {
         if (!name) {
             return;

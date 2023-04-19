@@ -262,10 +262,11 @@ function logIn(request, response) {
 }
 
 function logOut(request, response) {
-    const data = querystring.parse(request.headers.cookie);
-    const sessionID = decodeURIComponent(data.sessionID);
-    User.logOut(sessionID);
-
+    if (request.headers.cookie) {
+        const data = querystring.parse(request.headers.cookie);
+        const sessionID = decodeURIComponent(data.sessionID);
+        User.logOut(sessionID);
+    }
     response.statusCode = 302;
     response.setHeader('Location', '/login');
     response.setHeader('Set-Cookie', 'sessionID=""; Max-Age=0');
@@ -273,23 +274,13 @@ function logOut(request, response) {
 }
 
 function logOutOthers(request, response) {
-    if (!request.headers.cookie) {
-        return;
+    if (request.headers.cookie) {
+        const data = querystring.parse(request.headers.cookie);
+        const sessionID = decodeURIComponent(data.sessionID);
+        User.logOutOthers(sessionID);
     }
-    const data = querystring.parse(request.headers.cookie);
-    const sessionID = decodeURIComponent(data.sessionID);
-    const name = User.getUserBySessionID(sessionID);
-    const sessionIDs = User.getSessionIDs(name);
-
-    for (const id of sessionIDs) {
-        console.log(id, sessionID);
-        if (id !== sessionID) {
-            User.logOut(id);
-        }
-    }
-
     response.statusCode = 302;
-    response.setHeader('Location', `/user/${name}`);
+    response.setHeader('Location', request.headers.referer);
     response.end();
 }
 
