@@ -91,6 +91,9 @@ const server = http.createServer((request, response) => {
     case '/logout':
         logOut(request, response);
         return;
+    case '/logout/others':
+        logOutOthers(request, response);
+        return;
     case `/user/${name}`:
         response.statusCode = 200;
         response.setHeader('Cache-Control', 'no-cache');
@@ -269,6 +272,27 @@ function logOut(request, response) {
     response.end();
 }
 
+function logOutOthers(request, response) {
+    if (!request.headers.cookie) {
+        return;
+    }
+    const data = querystring.parse(request.headers.cookie);
+    const sessionID = decodeURIComponent(data.sessionID);
+    const name = User.getUserBySessionID(sessionID);
+    const sessionIDs = User.getSessionIDs(name);
+
+    for (const id of sessionIDs) {
+        console.log(id, sessionID);
+        if (id !== sessionID) {
+            User.logOut(id);
+        }
+    }
+
+    response.statusCode = 302;
+    response.setHeader('Location', `/user/${name}`);
+    response.end();
+}
+
 function renderHTML(title, body, headers = '') {
     headers = HTML.stylesheet('/main.css') + headers;
     headers += HTML.icon('/apple-touch-icon.png', '180x180');
@@ -319,13 +343,23 @@ function renderUserHTML(name) {
     const created = new Date(user.created);
     const title = name;
     const nav = renderNavHTML(name);
+
     const tasks = Task.getTasks(name);
     const tasksLinkText = `${tasks.length} ${(tasks.length === 1) ? 'task': 'tasks'}`;
     const tasksLink = `<a href="/">${tasksLinkText}</a>`;
+
+    const sessionIDs = User.getSessionIDs(name);
+    const otherSessions = sessionIDs.length - 1;
+    let logOutOthers = `${otherSessions} other session${(otherSessions === 1) ? '' : 's'}`;
+    if (otherSessions > 0) {
+        logOutOthers = `<a href="/logout/others">Log out ${logOutOthers}</a>`;
+    }
+
     const size = 30;
     const body = `<header><h1>${title}</h1>${nav}</header>
 <p>Member since: ${created.toLocaleDateString('en-us', { dateStyle: 'long' })}</p>
 <p>${tasksLink}</p>
+<p>${logOutOthers}</p>
 <form method="post" id="edit-user">
 <input type="hidden" name="name" value="${name}">
 <div>
