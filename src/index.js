@@ -330,10 +330,12 @@ function renderTasksHTML(name) {
 }
 
 function renderUserHTML(name) {
-    const user = User.getUser(name);
-    const created = new Date(user.created);
     const title = name;
     const nav = renderNavHTML(name);
+
+    const user = User.getUser(name);
+    const created = new Date(user.created);
+    const createdPretty = created.toLocaleDateString('en-us', { dateStyle: 'long' });
 
     const tasks = Task.getTasks(name);
     const tasksLinkText = `${tasks.length} ${(tasks.length === 1) ? 'task': 'tasks'}`;
@@ -348,7 +350,7 @@ function renderUserHTML(name) {
 
     const size = 30;
     const body = `<header><h1>${title}</h1>${nav}</header>
-<p>Member since: ${created.toLocaleDateString('en-us', { dateStyle: 'long' })}</p>
+<p>Member since: ${createdPretty}</p>
 <p>${tasksLink}</p>
 <p>${logOutOthers}</p>
 <form method="post" id="edit-user">
