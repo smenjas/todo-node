@@ -109,6 +109,21 @@ export default class User {
         Session.delete(sessionID);
     }
 
+    static getSessionIDs(name) {
+        if (!name) {
+            return;
+        }
+        const sessions = Session.all;
+        const sessionIDs = [];
+        for (const sessionID in sessions) {
+            const session = sessions[sessionID];
+            if (session.name === name) {
+                sessionIDs.push(sessionID);
+            }
+        }
+        return sessionIDs;
+    }
+
     static getUser(name) {
         if (!name) {
             return;
