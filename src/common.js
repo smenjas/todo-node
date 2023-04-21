@@ -13,8 +13,7 @@ export default class Common {
         if (!string.length) {
             return 0;
         }
-        let combos = 0;
-        combos += /[0-9]/.test(string) ? 10 : 0;
+        let combos = /[0-9]/.test(string) ? 10 : 0;
         if (hex) {
             combos += /[a-f]/i.test(string) ? 6 : 0;
             if (/[^0-9a-f]/i.test(string)) {
