@@ -135,55 +135,57 @@ server.listen(Common.port, Common.hostname, () => {
     console.log(`Server running at ${Common.server}/`);
 });
 
-function handlePostRequest(request, response, callback) {
-    if (request.method !== 'POST') {
-        const error = {
-            statusCode: 400, // HTTP 400: Bad Request
-            message: `ERROR: Request method is ${request.method}, not POST.`,
-        };
-        callback(error, '');
-    }
-    let body = '';
-    request.on('data', chunk => {
-        body += chunk.toString();
-    });
-    request.on('end', () => {
-        callback(null, body);
+function handlePostRequest(request) {
+    return new Promise((resolve, reject) => {
+        if (request.method !== 'POST') {
+            const error = {
+                statusCode: 400, // HTTP 400: Bad Request
+                message: `ERROR: Request method is ${request.method}, not POST.`,
+            };
+            return reject(error);
+        }
+        let body = '';
+        request.on('data', chunk => {
+            body += chunk.toString();
+        });
+        request.on('end', () => {
+            resolve(body);
+        });
     });
 }
 
 function downloadTasks(request, response, name) {
-    handlePostRequest(request, response, error => {
-        response.setHeader('Cache-Control', 'no-cache');
-        if (error) {
+    response.setHeader('Cache-Control', 'no-cache');
+    handlePostRequest(request)
+        .then(() => {
+            const tasks = Task.getTasks(name);
+            response.statusCode = 200; // HTTP 200: OK
+            response.setHeader('Content-Type', 'application/json');
+            response.end(JSON.stringify(tasks));
+        })
+        .catch(error => {
             console.error(error.message);
             response.statusCode = error.statusCode;
             response.end(error.message);
-            return;
-        }
-        const tasks = Task.getTasks(name);
-        response.statusCode = 200; // HTTP 200: OK
-        response.setHeader('Content-Type', 'application/json');
-        response.end(JSON.stringify(tasks));
-    });
+        });
 }
 
 function uploadTasks(request, response, name) {
-    handlePostRequest(request, response, (error, body) => {
-        response.setHeader('Cache-Control', 'no-cache');
-        if (error) {
+    response.setHeader('Cache-Control', 'no-cache');
+    handlePostRequest(request)
+        .then(body => {
+            response.statusCode = 200; // HTTP 200: OK
+            const tasks = JSON.parse(body);
+            const bytes = Buffer.byteLength(body);
+            console.log(tasks, bytes);
+            Task.setTasks(name, tasks);
+            response.end(`Server received ${bytes} bytes.`);
+        })
+        .catch(error => {
             console.error(error.message);
             response.statusCode = error.statusCode;
             response.end(error.message);
-            return;
-        }
-        response.statusCode = 200; // HTTP 200: OK
-        const tasks = JSON.parse(body);
-        const bytes = Buffer.byteLength(body);
-        console.log(tasks, bytes);
-        Task.setTasks(name, tasks);
-        response.end(`Server received ${bytes} bytes.`);
-    });
+        });
 }
 
 function setSessionCookie(response, session) {
@@ -196,69 +198,70 @@ function setSessionCookie(response, session) {
 }
 
 function editUser(request, response) {
-    handlePostRequest(request, response, (error, body) => {
-        response.setHeader('Cache-Control', 'no-cache');
-        if (error) {
+    response.setHeader('Cache-Control', 'no-cache');
+    handlePostRequest(request)
+        .then(body => {
+            const data = JSON.parse(body);
+            const user = { name: data.name };
+            const userError = User.edit(user, data.password, data.newPassword);
+            response.statusCode = userError ? 400 : 200; // 400: Bad Request, 200: OK
+            response.setHeader('Content-Type', 'application/json');
+            response.end(JSON.stringify(userError));
+        })
+        .catch(error => {
             console.error(error.message);
             response.statusCode = error.statusCode;
             response.end(error.message);
-            return;
-        }
-        const data = JSON.parse(body);
-        const user = { name: data.name };
-        const userError = User.edit(user, data.password, data.newPassword);
-        response.statusCode = userError ? 400 : 200; // 400: Bad Request, 200: OK
-        response.setHeader('Content-Type', 'application/json');
-        response.end(JSON.stringify(userError));
-    });
+        });
 }
 
 function createAccount(request, response) {
-    handlePostRequest(request, response, (error, body) => {
-        response.setHeader('Cache-Control', 'no-cache');
-        if (error) {
+    response.setHeader('Cache-Control', 'no-cache');
+    handlePostRequest(request)
+        .then(body => {
+            const data = JSON.parse(body);
+            const user = { name: data.name };
+            const userError = User.create(user, data.password);
+            if (!userError) {
+                const session = User.logIn(data.name, data.password);
+                setSessionCookie(response, session);
+                response.statusCode = 201; // HTTP 201: Created
+            } else {
+                response.statusCode = 409; // HTTP 409: Conflict
+            }
+            response.setHeader('Content-Type', 'application/json');
+            response.end(JSON.stringify(userError));
+        })
+        .catch(error => {
             console.error(error.message);
             response.statusCode = error.statusCode;
             response.end(error.message);
-            return;
-        }
-        const data = JSON.parse(body);
-        const user = { name: data.name };
-        const userError = User.create(user, data.password);
-        if (!userError) {
-            const session = User.logIn(data.name, data.password);
-            setSessionCookie(response, session);
-            response.statusCode = 201; // HTTP 201: Created
-        } else {
-            response.statusCode = 409; // HTTP 409: Conflict
-        }
-        response.setHeader('Content-Type', 'application/json');
-        response.end(JSON.stringify(userError));
-    });
+        });
 }
 
 function logIn(request, response) {
-    handlePostRequest(request, response, (error, body) => {
-        response.setHeader('Cache-Control', 'no-cache');
-        if (error) {
+    response.setHeader('Cache-Control', 'no-cache');
+    handlePostRequest(request)
+        .then(body => {
+            const data = JSON.parse(body);
+            const session = User.logIn(data.name, data.password);
+            let userError = '';
+            if (session.ID) {
+                setSessionCookie(response, session);
+                response.statusCode = 200; // HTTP 200: OK
+            } else {
+                userError = 'The username or password is incorrect.';
+                response.statusCode = 401; // HTTP 401: Unauthorized
+            }
+            response.setHeader('Content-Type', 'application/json');
+            response.end(JSON.stringify(userError));
+        })
+        .catch(error => {
             console.error(error.message);
             response.statusCode = error.statusCode;
             response.end(error.message);
             return;
-        }
-        const data = JSON.parse(body);
-        const session = User.logIn(data.name, data.password);
-        let userError = '';
-        if (session.ID) {
-            setSessionCookie(response, session);
-            response.statusCode = 200; // HTTP 200: OK
-        } else {
-            userError = 'The username or password is incorrect.';
-            response.statusCode = 401; // HTTP 401: Unauthorized
-        }
-        response.setHeader('Content-Type', 'application/json');
-        response.end(JSON.stringify(userError));
-    });
+        });
 }
 
 function logOut(request, response) {
