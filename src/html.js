@@ -22,14 +22,14 @@ ${body}
 
     static script(src, module = false) {
         src = HTML.escape(src);
-        const moduleAttr = (module) ? ' type="module"' : '';
+        const moduleAttr = module ? ' type="module"' : '';
         return `<script src="${src}"${moduleAttr} defer></script>\n`;
     }
 
     static icon(href, sizes = null, format = 'png') {
         href = HTML.escape(href);
-        const sizesAttr = (sizes) ? ` sizes="${sizes}"` : '';
-        const rel = (href.includes('apple-touch-icon')) ? 'apple-touch-icon' : 'icon';
+        const sizesAttr = sizes ? ` sizes="${sizes}"` : '';
+        const rel = href.includes('apple-touch-icon') ? 'apple-touch-icon' : 'icon';
         return `<link rel="${rel}" type="image/${format}" href="${href}"${sizesAttr}>\n`;
     }
 
