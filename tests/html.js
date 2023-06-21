@@ -86,7 +86,7 @@ tests['Script tags get rendered correctly.'] = () => {
 
 tests['Favicons get rendered correctly.'] = () => {
     let failures = [];
-    const favicons = {
+    const icons = {
         '<link rel="icon" type="image/vnd" href="favicon.ico" sizes="48x48">\n': {
             href: 'favicon.ico',
             sizes: '48x48',
@@ -97,10 +97,10 @@ tests['Favicons get rendered correctly.'] = () => {
             sizes: '180x180',
         },
     };
-    for (const [expected, favicon] of Object.entries(favicons)) {
-        const result = HTML.icon(favicon.href, favicon.sizes, favicon.format);
+    for (const [expected, icon] of Object.entries(icons)) {
+        const result = HTML.icon(icon.href, icon.sizes, icon.format);
         if (result !== expected) {
-            failures.push(`${JSON.stringify(favicon)} became: ${result}`);
+            failures.push(`${JSON.stringify(icon)} became: ${result}`);
         }
     }
     return failures;
