@@ -43,17 +43,17 @@ const server = http.createServer((request, response) => {
     case '/login.js':
         response.statusCode = 200;
         response.setHeader('Content-Type', 'text/javascript');
-        content = fs.readFileSync(`../public/js${path}`, 'utf8');
+        content = fs.readFileSync(`public/js${path}`, 'utf8');
         break;
     case '/common.js':
         response.statusCode = 200;
         response.setHeader('Content-Type', 'text/javascript');
-        content = fs.readFileSync('common.js', 'utf8');
+        content = fs.readFileSync('src/common.js', 'utf8');
         break;
     case '/main.css':
         response.statusCode = 200;
         response.setHeader('Content-Type', 'text/css');
-        content = fs.readFileSync('../public/css/main.css', 'utf8');
+        content = fs.readFileSync('public/css/main.css', 'utf8');
         break;
     case '/download-tasks':
         downloadTasks(request, response, name);
@@ -103,12 +103,12 @@ const server = http.createServer((request, response) => {
     case '/404.jpg':
         response.statusCode = 200;
         response.setHeader('Content-Type', 'image/jpeg');
-        content = fs.readFileSync('../public/img/404.jpg');
+        content = fs.readFileSync('public/img/404.jpg');
         break;
     case '/favicon.ico':
         response.statusCode = 200;
         response.setHeader('Content-Type', 'image/vnd');
-        content = fs.readFileSync(`../public/img${path}`);
+        content = fs.readFileSync(`public/img${path}`);
         break;
     case '/apple-touch-icon.png':
     case '/favicon-16.png':
@@ -117,7 +117,7 @@ const server = http.createServer((request, response) => {
     case '/favicon-512.png':
         response.statusCode = 200;
         response.setHeader('Content-Type', 'image/png');
-        content = fs.readFileSync(`../public/img${path}`);
+        content = fs.readFileSync(`public/img${path}`);
         break;
     default:
         response.statusCode = 404;

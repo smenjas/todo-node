@@ -171,7 +171,7 @@ export default class User {
 
     static get all() {
         try {
-            const json = fs.readFileSync('../data/users.json', 'utf8');
+            const json = fs.readFileSync('data/users.json', 'utf8');
             return JSON.parse(json);
         }
         catch (e) {
@@ -183,7 +183,7 @@ export default class User {
 
     static set all(users) {
         try {
-            fs.writeFileSync('../data/users.json', JSON.stringify(users));
+            fs.writeFileSync('data/users.json', JSON.stringify(users));
         }
         catch (e) {
             console.error(e);
