@@ -4,7 +4,7 @@ import crypto from 'crypto';
 export default class Session {
     static get all() {
         try {
-            const json = fs.readFileSync('../data/sessions.json', 'utf8');
+            const json = fs.readFileSync('data/sessions.json', 'utf8');
             return JSON.parse(json);
         }
         catch (e) {
@@ -14,7 +14,7 @@ export default class Session {
     }
 
     static set all(sessions) {
-        fs.writeFile('../data/sessions.json', JSON.stringify(sessions), error => {
+        fs.writeFile('data/sessions.json', JSON.stringify(sessions), error => {
             if (error) {
                 console.error(error);
             }
