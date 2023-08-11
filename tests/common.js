@@ -3,7 +3,7 @@ import Common from '../src/common.js';
 const tests = {};
 
 tests['Username requirements are enforced.'] = () => {
-    let failures = [];
+    const failures = [];
     const names = {
         '': false,
         '1': true,
@@ -34,7 +34,7 @@ tests['Username requirements are enforced.'] = () => {
 };
 
 tests['Password requirements are enforced.'] = () => {
-    let failures = [];
+    const failures = [];
     const passwords = {
         'This is my password.': true,
         'Short password.': false,
@@ -55,7 +55,7 @@ tests['Password requirements are enforced.'] = () => {
 };
 
 tests['Entropy calculations make sense.'] = () => {
-    let failures = [];
+    const failures = [];
     const strings = {
         '': 0,
         '1234567890123xX_': 105,

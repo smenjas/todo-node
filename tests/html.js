@@ -3,7 +3,7 @@ import HTML from '../src/html.js';
 const tests = {};
 
 tests['HTML gets rendered correctly.'] = () => {
-    let failures = [];
+    const failures = [];
     const pages = {};
     const html = `<!DOCTYPE html>
 <html lang="en-us">
@@ -33,7 +33,7 @@ tests['HTML gets rendered correctly.'] = () => {
 };
 
 tests['HTML special characters get escaped.'] = () => {
-    let failures = [];
+    const failures = [];
     const chars = {
         '&': '&amp;',
         '<': '&lt;',
@@ -51,7 +51,7 @@ tests['HTML special characters get escaped.'] = () => {
 };
 
 tests['CSS links get rendered correctly.'] = () => {
-    let failures = [];
+    const failures = [];
     const stylesheets = {
         '<link rel="stylesheet" href="style.css">\n': 'style.css',
     };
@@ -65,7 +65,7 @@ tests['CSS links get rendered correctly.'] = () => {
 };
 
 tests['Script tags get rendered correctly.'] = () => {
-    let failures = [];
+    const failures = [];
     const scripts = {
         '<script src="index.js" defer></script>\n': {
             src: 'index.js',
@@ -85,7 +85,7 @@ tests['Script tags get rendered correctly.'] = () => {
 };
 
 tests['Favicons get rendered correctly.'] = () => {
-    let failures = [];
+    const failures = [];
     const icons = {
         '<link rel="icon" type="image/vnd" href="favicon.ico" sizes="48x48">\n': {
             href: 'favicon.ico',

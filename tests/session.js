@@ -4,7 +4,7 @@ import Session from '../src/session.js';
 const tests = {};
 
 tests['Session ID meets requirements.'] = () => {
-    let failures = [];
+    const failures = [];
     let count = 0;
     const sessionIDs = {};
     const entropies = {};
@@ -28,7 +28,7 @@ tests['Session ID meets requirements.'] = () => {
 };
 
 tests['Expired sessions get pruned.'] = () => {
-    let failures = [];
+    const failures = [];
     let count = -2;
     const now = Date.now();
     const sessions = {};

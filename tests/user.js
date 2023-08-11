@@ -4,7 +4,7 @@ import User from '../src/user.js';
 const tests = {};
 
 tests['Salt meets requirements.'] = () => {
-    let failures = [];
+    const failures = [];
     let count = 0;
     const salts = {};
     while (count++ < 1e4) {
@@ -23,7 +23,7 @@ tests['Salt meets requirements.'] = () => {
 };
 
 tests['Hash meets requirements.'] = () => {
-    let failures = [];
+    const failures = [];
     let count = 0;
     const hashes = {};
     while (count++ < 3) {
