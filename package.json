@@ -5,8 +5,8 @@
   "description": "A to-do app built with Node.js",
   "main": "index.js",
   "scripts": {
-    "dev": "node_modules/nodemon/bin/nodemon.js src/index.js",
-    "lint": "node_modules/eslint/bin/eslint.js *.js src/*.js tests/*.js public/js/*.js",
+    "dev": "npx nodemon src/index.js",
+    "lint": "npx eslint *.js src/*.js tests/*.js public/js/*.js",
     "test": "time node test.js"
   },
   "repository": {
