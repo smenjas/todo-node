@@ -50,8 +50,8 @@ form span, button, input {
     padding: 0.3rem;
 }
 
-form#create-account input,
-form#login input {
+#create-account input,
+#login input {
     max-width: calc(100vw - 4rem);
 }
 
