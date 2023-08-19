@@ -9,6 +9,7 @@ the Node.js runtime.
 - Limited dev tools:
   - [ESLint](https://www.npmjs.com/package/eslint)
   - [nodemon](https://www.npmjs.com/package/nodemon)
+  - [Stylelint](https://stylelint.io/)
 
 ## Goals
 - [x] [As simple as possible, but not simpler](https://quoteinvestigator.com/2011/05/13/einstein-simple/)
