@@ -57,7 +57,7 @@ form span, button, input {
 
 #valid-name,
 #valid-password,
-#valid-newPassword {
+#valid-new-password {
     display: inline-block;
     width: 1rem;
     padding: 0.2rem 0.3rem;

@@ -364,7 +364,7 @@ function renderUserHTML(name) {
 </div>
 <div>
     <input size="${size}" maxlength="${Common.passMax}" placeholder="new password" type="password" name="newPassword" required>
-    <span id="valid-newPassword"></span>
+    <span id="valid-new-password"></span>
     <span id="password-strength"></span>
 </div>
 <button type="submit">Change Password</button>
