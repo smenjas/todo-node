@@ -3,9 +3,11 @@ body {
     background: white;
     color: black;
 }
+
 a {
     color: #005;
 }
+
 a:visited {
     color: #505;
 }
@@ -16,13 +18,16 @@ header {
     max-width: 53rem;
     width: calc(100vw - 3rem);
 }
+
 header h1,
 header nav {
-    margin: 0 0 1rem 0;
+    margin: 0 0 1rem;
 }
+
 header h1 {
     flex-grow: 1;
 }
+
 header nav ul {
     margin: 0;
 }
@@ -30,25 +35,29 @@ header nav ul {
 fieldset {
     border: none;
 }
+
 button, input {
     border: 1px solid black;
     background: #eee;
     color: black;
 }
+
 p, form, button, input {
     font-size: 1.5rem;
 }
+
 form span, button, input {
     padding: 0.3rem;
 }
 
-form#create-account input,
-form#login input {
+#create-account input,
+#login input {
     max-width: calc(100vw - 4rem);
 }
+
 #valid-name,
 #valid-password,
-#valid-newPassword {
+#valid-new-password {
     display: inline-block;
     width: 1rem;
     padding: 0.2rem 0.3rem;
@@ -64,18 +73,22 @@ button#add-task {
     display: table-row;
     font-size: 1.5rem;
 }
+
 #tasks button {
     height: 2.5rem;
     width: 2.5rem;
 }
+
 #tasks input {
     max-width: 50rem;
     width: calc(100vw - 6rem);
 }
+
 #tasks li {
     display: flex;
     flex-wrap: nowrap;
 }
+
 #tasks li:hover {
     outline: 5px outset black;
 }
@@ -87,11 +100,13 @@ button#add-task {
     #tasks li:first-child {
         display: none;
     }
+
     input {
         background: white;
         color: black;
         border: none;
     }
+
     #tasks ul {
         display: block;
         list-style-type: "☐";
@@ -103,17 +118,21 @@ button#add-task {
         background: black;
         color: white;
     }
+
     a {
         color: #aaf;
     }
+
     a:visited {
         color: #faf;
     }
+
     button, input {
         border-color: white;
         background: #222;
         color: white;
     }
+
     #tasks li:hover {
         outline-color: white;
     }

@@ -22,7 +22,7 @@ if (!form) {
 const oldPasswordInput = document.querySelector('[name=password]');
 const newPasswordInput = document.querySelector('[name=newPassword]');
 const oldPasswordIndicator = document.querySelector('#valid-password');
-const newPasswordIndicator = document.querySelector('#valid-newPassword');
+const newPasswordIndicator = document.querySelector('#valid-new-password');
 
 Auth.validateInput(oldPasswordInput, oldPasswordIndicator, Common.validatePassword);
 Auth.validateInput(newPasswordInput, newPasswordIndicator, Common.validatePassword);
