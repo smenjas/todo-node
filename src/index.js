@@ -8,7 +8,7 @@ import Task from './task.js';
 import User from './user.js';
 
 const server = http.createServer((request, response) => {
-    const path = url.parse(request.url).pathname;
+    const path = request.url;
     let sessionID = '';
     let name = '';
 
