@@ -1,6 +1,5 @@
 import fs from 'fs';
 import http from 'http';
-import url from 'url';
 import querystring from 'querystring';
 import Common from './common.js';
 import HTML from './html.js';
